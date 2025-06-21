@@ -30,3 +30,4 @@ Jira should be configured to send webhooks to `http://your-server:8080/webhook`.
 
 Issue comments will appear in Discord with the comment text and author.
 When an issue transitions between statuses, the change will be included in the notification.
+If a webhook contains multiple field updates, all of the changes are summarized in a single Discord message so you can see everything that changed at a glance.
