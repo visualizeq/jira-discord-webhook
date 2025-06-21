@@ -127,15 +127,30 @@ func webhookHandler(w http.ResponseWriter, r *http.Request) {
 		})
 	}
 
-	if payload.Changelog != nil {
+	if payload.Changelog != nil && len(payload.Changelog.Items) > 0 {
+		var changes []string
 		for _, item := range payload.Changelog.Items {
-			if strings.ToLower(item.Field) == "status" {
-				embed.Fields = append(embed.Fields, DiscordField{
-					Name:  "Transition",
-					Value: fmt.Sprintf("%s → %s", item.FromString, item.ToString),
-				})
-				break
+			if item.FromString == "" && item.ToString == "" {
+				continue
 			}
+
+			name := strings.Title(item.Field)
+			// Normalize commonly used fields for clarity
+			if strings.ToLower(item.Field) == "status" {
+				name = "Status"
+			}
+
+			if item.FromString == "" {
+				changes = append(changes, fmt.Sprintf("%s set to %s", name, item.ToString))
+			} else {
+				changes = append(changes, fmt.Sprintf("%s: %s → %s", name, item.FromString, item.ToString))
+			}
+		}
+		if len(changes) > 0 {
+			embed.Fields = append(embed.Fields, DiscordField{
+				Name:  "Changes",
+				Value: strings.Join(changes, "\n"),
+			})
 		}
 	}
 
