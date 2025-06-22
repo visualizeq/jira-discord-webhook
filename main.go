@@ -4,12 +4,20 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"log"
 	"net/http"
 	"os"
 	"strings"
 )
+
+// capitalize returns s with the first letter in uppercase and the rest in lowercase.
+func capitalize(s string) string {
+	if s == "" {
+		return s
+	}
+	return strings.ToUpper(s[:1]) + strings.ToLower(s[1:])
+}
 
 type JiraIssue struct {
 	Key    string `json:"key"`
@@ -90,13 +98,17 @@ func sendToDiscord(msg DiscordWebhookMessage) error {
 	defer resp.Body.Close()
 
 	if resp.StatusCode >= 300 {
-		body, _ := ioutil.ReadAll(resp.Body)
+		body, _ := io.ReadAll(resp.Body)
 		return fmt.Errorf("discord webhook returned status %d: %s", resp.StatusCode, string(body))
 	}
 	return nil
 }
 
 func webhookHandler(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodPost {
+		http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
+		return
+	}
 	var payload JiraWebhook
 	if err := json.NewDecoder(r.Body).Decode(&payload); err != nil {
 		log.Println("failed to decode jira payload:", err)
@@ -134,7 +146,7 @@ func webhookHandler(w http.ResponseWriter, r *http.Request) {
 				continue
 			}
 
-			name := strings.Title(item.Field)
+			name := capitalize(item.Field)
 			// Normalize commonly used fields for clarity
 			if strings.ToLower(item.Field) == "status" {
 				name = "Status"

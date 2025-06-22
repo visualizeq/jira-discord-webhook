@@ -31,3 +31,17 @@ Jira should be configured to send webhooks to `http://your-server:8080/webhook`.
 Issue comments will appear in Discord with the comment text and author.
 When an issue transitions between statuses, the change will be included in the notification.
 If a webhook contains multiple field updates, all of the changes are summarized in a single Discord message so you can see everything that changed at a glance.
+
+## Docker
+
+This repository includes a multi-architecture `Dockerfile`. Build images for multiple platforms with Docker Buildx:
+
+```bash
+docker buildx build --platform linux/amd64,linux/arm64 -t my/jira-hook .
+```
+
+Run the resulting image by providing the required environment variables:
+
+```bash
+docker run -e DISCORD_WEBHOOK_URL=... -p 8080:8080 my/jira-hook
+```
