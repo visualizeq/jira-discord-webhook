@@ -45,3 +45,9 @@ Run the resulting image by providing the required environment variables:
 ```bash
 docker run -e DISCORD_WEBHOOK_URL=... -p 8080:8080 my/jira-hook
 ```
+
+## Postman Collection
+
+The `postman` directory contains a collection with example webhook requests.
+Import `postman/jira-discord-webhook.postman_collection.json` into Postman to
+manually trigger the server with sample issue, comment, and changelog payloads.
