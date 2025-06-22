@@ -1,8 +1,15 @@
 [changelog]
-header = ""
-body = ""
+template = "github"
 trim = true
+
+[remote.github]
+owner = "visualizeq"
+repo = "jira-discord-webhook"
 
 [git]
 conventional_commits = true
-tag_pattern = ".*"
+filter_unconventional = true
+tag_pattern = "v[0-9].*"
+skip_tags = "beta|alpha"
+ignore_tags = "rc|v2.1.0|v2.1.1"
+sort_commits = "newest"
