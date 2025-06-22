@@ -13,7 +13,11 @@
           {"key": "Content-Type", "value": "application/json"}
         ],
         "url": {"raw": "{{base_url}}/webhook", "host": ["{{base_url}}"], "path": ["webhook"]},
-        "body": {"mode": "raw", "raw": "{"issue":{"key":"PRJ-1","fields":{"summary":"Test issue","description":"desc","priority":{"name":"High"},"assignee":{"displayName":"Bob"},"issuetype":{"name":"Task"},"status":{"name":"Open"}}}}"}
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"issue\": {\n    \"key\": \"PRJ-1\",\n    \"fields\": {\n      \"summary\": \"Test issue\",\n      \"description\": \"desc\",\n      \"priority\": {\"name\": \"High\"},\n      \"assignee\": {\"displayName\": \"Bob\"},\n      \"issuetype\": {\"name\": \"Task\"},\n      \"status\": {\"name\": \"Open\"}\n    }\n  }\n}\n",
+          "options": {"raw": {"language": "json"}}
+        }
       },
       "event": [{"listen": "test", "script": {"exec": ["pm.test(\"Status code is 200\", function () {", "    pm.response.to.have.status(200);", "});"]}}]
     },
@@ -25,7 +29,11 @@
           {"key": "Content-Type", "value": "application/json"}
         ],
         "url": {"raw": "{{base_url}}/webhook", "host": ["{{base_url}}"], "path": ["webhook"]},
-        "body": {"mode": "raw", "raw": "{"issue":{"key":"PRJ-2","fields":{"summary":"Commented","description":"desc","priority":{"name":"High"},"assignee":{"displayName":"Bob"},"issuetype":{"name":"Task"},"status":{"name":"Open"}}},"comment":{"body":"looks good","author":{"displayName":"Alice"}}}"}
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"issue\": {\n    \"key\": \"PRJ-2\",\n    \"fields\": {\n      \"summary\": \"Commented\",\n      \"description\": \"desc\",\n      \"priority\": {\"name\": \"High\"},\n      \"assignee\": {\"displayName\": \"Bob\"},\n      \"issuetype\": {\"name\": \"Task\"},\n      \"status\": {\"name\": \"Open\"}\n    }\n  },\n  \"comment\": {\n    \"body\": \"looks good\",\n    \"author\": {\"displayName\": \"Alice\"}\n  }\n}\n",
+          "options": {"raw": {"language": "json"}}
+        }
       },
       "event": [{"listen": "test", "script": {"exec": ["pm.test(\"Status code is 200\", function () {", "    pm.response.to.have.status(200);", "});"]}}]
     },
@@ -37,7 +45,11 @@
           {"key": "Content-Type", "value": "application/json"}
         ],
         "url": {"raw": "{{base_url}}/webhook", "host": ["{{base_url}}"], "path": ["webhook"]},
-        "body": {"mode": "raw", "raw": "{"issue":{"key":"PRJ-3","fields":{"summary":"Change","description":"desc","priority":{"name":"High"},"assignee":{"displayName":"Bob"},"issuetype":{"name":"Task"},"status":{"name":"Closed"}}},"changelog":{"items":[{"field":"status","fromString":"Open","toString":"Closed"}]}}"}
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"issue\": {\n    \"key\": \"PRJ-3\",\n    \"fields\": {\n      \"summary\": \"Change\",\n      \"description\": \"desc\",\n      \"priority\": {\"name\": \"High\"},\n      \"assignee\": {\"displayName\": \"Bob\"},\n      \"issuetype\": {\"name\": \"Task\"},\n      \"status\": {\"name\": \"Closed\"}\n    }\n  },\n  \"changelog\": {\n    \"items\": [\n      {\"field\": \"status\", \"fromString\": \"Open\", \"toString\": \"Closed\"}\n    ]\n  }\n}\n",
+          "options": {"raw": {"language": "json"}}
+        }
       },
       "event": [{"listen": "test", "script": {"exec": ["pm.test(\"Status code is 200\", function () {", "    pm.response.to.have.status(200);", "});"]}}]
     },
@@ -49,7 +61,11 @@
           {"key": "Content-Type", "value": "application/json"}
         ],
         "url": {"raw": "{{base_url}}/webhook", "host": ["{{base_url}}"], "path": ["webhook"]},
-        "body": {"mode": "raw", "raw": "{\"issue\":{\"key\":\"PRJ-4\",\"fields\":{\"summary\":\"Comment and Change\",\"description\":\"desc\",\"priority\":{\"name\":\"High\"},\"assignee\":{\"displayName\":\"Bob\"},\"issuetype\":{\"name\":\"Task\"},\"status\":{\"name\":\"Closed\"}}},\"comment\":{\"body\":\"needs work\",\"author\":{\"displayName\":\"Alice\"}},\"changelog\":{\"items\":[{\"field\":\"status\",\"fromString\":\"Open\",\"toString\":\"Closed\"}]}}"}
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"issue\": {\n    \"key\": \"PRJ-4\",\n    \"fields\": {\n      \"summary\": \"Comment and Change\",\n      \"description\": \"desc\",\n      \"priority\": {\"name\": \"High\"},\n      \"assignee\": {\"displayName\": \"Bob\"},\n      \"issuetype\": {\"name\": \"Task\"},\n      \"status\": {\"name\": \"Closed\"}\n    }\n  },\n  \"comment\": {\n    \"body\": \"needs work\",\n    \"author\": {\"displayName\": \"Alice\"}\n  },\n  \"changelog\": {\n    \"items\": [\n      {\"field\": \"status\", \"fromString\": \"Open\", \"toString\": \"Closed\"}\n    ]\n  }\n}\n",
+          "options": {"raw": {"language": "json"}}
+        }
       },
       "event": [{"listen": "test", "script": {"exec": ["pm.test(\"Status code is 200\", function () {", "    pm.response.to.have.status(200);", "});"]}}]
     }
