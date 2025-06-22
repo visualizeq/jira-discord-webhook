@@ -72,3 +72,7 @@ docker run -e DISCORD_WEBHOOK_URL=... -p 8080:8080 my/jira-hook
 The `postman` directory contains a collection with example webhook requests.
 Import `postman/jira-discord-webhook.postman_collection.json` into Postman to
 manually trigger the server with sample issue, comment, and changelog payloads.
+
+## Releases
+
+This project automatically generates release notes using [git-cliff](https://github.com/orhun/git-cliff) whenever changes are pushed to the `main` branch or a tag is created.
