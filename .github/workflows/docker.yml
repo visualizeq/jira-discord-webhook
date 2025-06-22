@@ -35,10 +35,14 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Install tparse
+        run: go install github.com/mfridman/tparse@v0.17.0
+
       - name: Run tests
         id: tests
         run: |
-          go test ./... -coverprofile=coverage.out | tee /tmp/test.log
+          go test -json ./... -coverprofile=coverage.out > /tmp/go-test.json
+          tparse -all -file /tmp/go-test.json | tee /tmp/test.log
           go tool cover -func=coverage.out | tee -a /tmp/test.log
 
       - name: Upload coverage
