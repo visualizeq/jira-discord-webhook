@@ -73,6 +73,16 @@ The `postman` directory contains a collection with example webhook requests.
 Import `postman/jira-discord-webhook.postman_collection.json` into Postman to
 manually trigger the server with sample issue, comment, and changelog payloads.
 
+## Testing
+
+For summarized test output install [tparse](https://github.com/mfridman/tparse)
+and run:
+
+```bash
+go install github.com/mfridman/tparse@latest
+go test -json ./... | tparse -all
+```
+
 ## Releases
 
 This project automatically generates release notes using [git-cliff](https://github.com/orhun/git-cliff) whenever changes are pushed to the `main` branch or a tag is created.
