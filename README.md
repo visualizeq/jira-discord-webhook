@@ -11,18 +11,22 @@ go build
 
 ## Running
 
-Set the `DISCORD_WEBHOOK_URL` environment variable to your Discord webhook and start the server:
+Set the `DISCORD_WEBHOOK_URL` environment variable to your Discord webhook and start the server. You can export the variables in your shell or create a `.env` file:
 
 ```bash
 export DISCORD_WEBHOOK_URL="https://discord.com/api/webhooks/..."
 go run .
 ```
 
+Copy `.env.example` to `.env` to provide the required variables without exporting them manually.
+
 Set `JIRA_BASE_URL` to the base URL for your Jira instance so links in Discord messages work correctly:
 
 ```bash
 export JIRA_BASE_URL="https://your-company.atlassian.net/browse"
 ```
+
+Environment variables from a `.env` file are loaded automatically when the server starts.
 
 The server listens on port `8080` by default. You can override this by setting the `PORT` environment variable.
 
@@ -31,6 +35,12 @@ Jira should be configured to send webhooks to `http://your-server:8080/webhook`.
 Issue comments will appear in Discord with the comment text and author.
 When an issue transitions between statuses, the change will be included in the notification.
 If a webhook contains multiple field updates, all of the changes are summarized in a single Discord message so you can see everything that changed at a glance.
+Each message type uses a different embed color so you can quickly see what kind of update occurred.
+
+* Issue events are blue (`#00B0F4`)
+* Comment events are green (`#347433`)
+* Changelog events are orange (`#FF6F3C`)
+* Combined comment and changelog events are purple (`#5409DA`)
 
 ## Docker
 

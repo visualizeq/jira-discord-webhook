@@ -29,6 +29,9 @@ func TestToDiscordMessageIssue(t *testing.T) {
 	if msg.Embeds[0].URL != "https://example.com/browse/PRJ-1" {
 		t.Fatalf("unexpected url: %s", msg.Embeds[0].URL)
 	}
+	if msg.Embeds[0].Color != issueColor {
+		t.Fatalf("unexpected color: %d", msg.Embeds[0].Color)
+	}
 }
 
 func TestToDiscordMessageComment(t *testing.T) {
@@ -46,6 +49,9 @@ func TestToDiscordMessageComment(t *testing.T) {
 	if !found {
 		t.Fatalf("missing comment author field")
 	}
+	if msg.Embeds[0].Color != commentColor {
+		t.Fatalf("unexpected color: %d", msg.Embeds[0].Color)
+	}
 }
 
 func TestToDiscordMessageChangelog(t *testing.T) {
@@ -60,6 +66,9 @@ func TestToDiscordMessageChangelog(t *testing.T) {
 	}
 	if !found {
 		t.Fatalf("expected status change field")
+	}
+	if msg.Embeds[0].Color != changelogColor {
+		t.Fatalf("unexpected color: %d", msg.Embeds[0].Color)
 	}
 }
 
@@ -80,5 +89,8 @@ func TestToDiscordMessageCommentChangelog(t *testing.T) {
 	}
 	if !hasAuthor || !hasChange {
 		t.Fatalf("expected comment author and change fields")
+	}
+	if msg.Embeds[0].Color != commentChangelogColor {
+		t.Fatalf("unexpected color: %d", msg.Embeds[0].Color)
 	}
 }
