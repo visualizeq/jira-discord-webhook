@@ -5,6 +5,7 @@ import (
 	"os"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/joho/godotenv"
 
 	"jira-discord-webhook/internal/discord"
 	"jira-discord-webhook/internal/jira"
@@ -29,6 +30,8 @@ func webhookHandler(c *fiber.Ctx) error {
 }
 
 func main() {
+	_ = godotenv.Load()
+
 	app := fiber.New()
 	app.Post("/webhook", webhookHandler)
 	port := os.Getenv("PORT")
