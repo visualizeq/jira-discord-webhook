@@ -38,7 +38,15 @@ jobs:
       - name: Run tests
         id: tests
         run: |
-          go test ./... | tee /tmp/test.log
+          go test ./... -coverprofile=coverage.out | tee /tmp/test.log
+          go tool cover -func=coverage.out | tee -a /tmp/test.log
+
+      - name: Upload coverage
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage
+          path: coverage.out
 
       - name: Add test summary
         if: always()
