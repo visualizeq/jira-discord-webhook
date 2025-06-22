@@ -1,0 +1,15 @@
+version: '3.8'
+services:
+  jira-discord-webhook:
+    image: ghcr.io/visualizeq/jira-discord-webhook:develop
+    environment:
+      - DISCORD_WEBHOOK_URL=${DISCORD_WEBHOOK_URL}
+      - JIRA_BASE_URL=${JIRA_BASE_URL}
+      - PORT=${PORT:-8080}
+      - ISSUE_COLOR=${ISSUE_COLOR-0x00B0F4}
+      - COMMENT_COLOR=${COMMENT_COLOR-0x347433}
+      - CHANGELOG_COLOR=${CHANGELOG_COLOR-0xFF6F3C}
+      - COMMENT_CHANGELOG_COLOR=${COMMENT_CHANGELOG_COLOR-0x5409DA}
+    ports:
+      - "${PORT:-8080}:8080"
+    restart: always

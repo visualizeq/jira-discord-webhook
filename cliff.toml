@@ -1,0 +1,8 @@
+[changelog]
+header = ""
+body = ""
+trim = true
+
+[git]
+conventional_commits = true
+tag_pattern = ".*"
