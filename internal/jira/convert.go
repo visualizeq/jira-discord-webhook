@@ -2,6 +2,8 @@ package jira
 
 import (
 	"fmt"
+	"os"
+	"strconv"
 	"strings"
 
 	"jira-discord-webhook/internal/discord"
@@ -13,6 +15,23 @@ const (
 	changelogColor        = 0xFF6F3C
 	commentChangelogColor = 0x5409DA
 )
+
+// colorFromEnv returns the color defined in the given environment variable. If
+// the variable is empty or invalid, def is returned.
+func colorFromEnv(name string, def int) int {
+	val := os.Getenv(name)
+	if val == "" {
+		return def
+	}
+	if strings.HasPrefix(val, "#") {
+		val = val[1:]
+	}
+	v, err := strconv.ParseInt(val, 0, 32)
+	if err != nil {
+		return def
+	}
+	return int(v)
+}
 
 // Capitalize returns s with the first letter upper-cased.
 func Capitalize(s string) string {
@@ -35,13 +54,13 @@ func ToDiscordMessage(w Webhook, baseURL string) discord.WebhookMessage {
 	}
 	switch {
 	case w.Comment != nil && w.Changelog != nil:
-		embed.Color = commentChangelogColor
+		embed.Color = colorFromEnv("COMMENT_CHANGELOG_COLOR", commentChangelogColor)
 	case w.Comment != nil:
-		embed.Color = commentColor
+		embed.Color = colorFromEnv("COMMENT_COLOR", commentColor)
 	case w.Changelog != nil:
-		embed.Color = changelogColor
+		embed.Color = colorFromEnv("CHANGELOG_COLOR", changelogColor)
 	default:
-		embed.Color = issueColor
+		embed.Color = colorFromEnv("ISSUE_COLOR", issueColor)
 	}
 	embed.Description = w.Issue.Fields.Description
 

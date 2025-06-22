@@ -42,6 +42,17 @@ Each message type uses a different embed color so you can quickly see what kind 
 * Changelog events are orange (`#FF6F3C`)
 * Combined comment and changelog events are purple (`#5409DA`)
 
+You can override these defaults by setting the following environment variables:
+
+```
+ISSUE_COLOR=0x00B0F4
+COMMENT_COLOR=0x347433
+CHANGELOG_COLOR=0xFF6F3C
+COMMENT_CHANGELOG_COLOR=0x5409DA
+```
+
+Values may be specified in decimal or hexadecimal (with `0x` or `#` prefixes).
+
 ## Docker
 
 This repository includes a multi-architecture `Dockerfile`. Build images for multiple platforms with Docker Buildx:
