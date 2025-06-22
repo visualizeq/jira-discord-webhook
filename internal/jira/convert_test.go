@@ -21,6 +21,7 @@ func loadWebhook(t *testing.T, name string) Webhook {
 }
 
 func TestToDiscordMessageIssue(t *testing.T) {
+	os.Unsetenv("ISSUE_COLOR")
 	w := loadWebhook(t, "issue.json")
 	msg := ToDiscordMessage(w, "https://example.com/browse")
 	if msg.Embeds[0].Title != "PRJ-1: Test issue" {
@@ -35,6 +36,7 @@ func TestToDiscordMessageIssue(t *testing.T) {
 }
 
 func TestToDiscordMessageComment(t *testing.T) {
+	os.Unsetenv("COMMENT_COLOR")
 	w := loadWebhook(t, "comment.json")
 	msg := ToDiscordMessage(w, "")
 	if msg.Embeds[0].Description != "looks good" {
@@ -55,6 +57,7 @@ func TestToDiscordMessageComment(t *testing.T) {
 }
 
 func TestToDiscordMessageChangelog(t *testing.T) {
+	os.Unsetenv("CHANGELOG_COLOR")
 	w := loadWebhook(t, "changelog.json")
 	msg := ToDiscordMessage(w, "")
 	var found bool
@@ -73,6 +76,7 @@ func TestToDiscordMessageChangelog(t *testing.T) {
 }
 
 func TestToDiscordMessageCommentChangelog(t *testing.T) {
+	os.Unsetenv("COMMENT_CHANGELOG_COLOR")
 	w := loadWebhook(t, "comment_changelog.json")
 	msg := ToDiscordMessage(w, "")
 	if msg.Embeds[0].Description != "needs work" {
@@ -92,5 +96,15 @@ func TestToDiscordMessageCommentChangelog(t *testing.T) {
 	}
 	if msg.Embeds[0].Color != commentChangelogColor {
 		t.Fatalf("unexpected color: %d", msg.Embeds[0].Color)
+	}
+}
+
+func TestToDiscordMessageColorFromEnv(t *testing.T) {
+	os.Setenv("ISSUE_COLOR", "0x123456")
+	defer os.Unsetenv("ISSUE_COLOR")
+	w := loadWebhook(t, "issue.json")
+	msg := ToDiscordMessage(w, "")
+	if msg.Embeds[0].Color != 0x123456 {
+		t.Fatalf("env color not applied")
 	}
 }
