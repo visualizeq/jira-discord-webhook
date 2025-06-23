@@ -105,10 +105,10 @@ jobs:
 
       - name: Generate release notes
         id: cliff
-        uses: orhun/git-cliff-action@v2
+        uses: orhun/git-cliff-action@v3
         with:
           config: cliff.toml
-          output: release.md
+          args: --output release.md
 
       - name: Check release notes
         run: test -f release.md
