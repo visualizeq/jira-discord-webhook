@@ -10,64 +10,168 @@
       "request": {
         "method": "POST",
         "header": [
-          {"key": "Content-Type", "value": "application/json"}
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
         ],
-        "url": {"raw": "{{base_url}}/webhook", "host": ["{{base_url}}"], "path": ["webhook"]},
+        "url": {
+          "raw": "{{base_url}}/webhook",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "webhook"
+          ]
+        },
         "body": {
           "mode": "raw",
-          "raw": "{\n  \"issue\": {\n    \"key\": \"PRJ-1\",\n    \"fields\": {\n      \"summary\": \"Test issue\",\n      \"description\": \"desc\",\n      \"priority\": {\"name\": \"High\"},\n      \"assignee\": {\"displayName\": \"Bob\"},\n      \"issuetype\": {\"name\": \"Task\"},\n      \"status\": {\"name\": \"Open\"}\n    }\n  }\n}\n",
-          "options": {"raw": {"language": "json"}}
+          "raw": "{\n  \"issue\": {\n    \"key\": \"PRJ-1\",\n    \"fields\": {\n      \"summary\": \"Test issue with https://summary.example.com and https://another-summary.example.com\",\n      \"description\": \"See https://jira.example.com/browse/PRJ-1 and https://docs.example.com for details. More at https://desc.example.com\",\n      \"priority\": {\"name\": \"High\"},\n      \"assignee\": {\"displayName\": \"Bob\"},\n      \"issuetype\": {\"name\": \"Task\"},\n      \"status\": {\"name\": \"Open\"}\n    }\n  }\n}\n",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
         }
       },
-      "event": [{"listen": "test", "script": {"exec": ["pm.test(\"Status code is 200\", function () {", "    pm.response.to.have.status(200);", "});"]}}]
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});"
+            ]
+          }
+        }
+      ]
     },
     {
       "name": "Comment Event",
       "request": {
         "method": "POST",
         "header": [
-          {"key": "Content-Type", "value": "application/json"}
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
         ],
-        "url": {"raw": "{{base_url}}/webhook", "host": ["{{base_url}}"], "path": ["webhook"]},
+        "url": {
+          "raw": "{{base_url}}/webhook",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "webhook"
+          ]
+        },
         "body": {
           "mode": "raw",
-          "raw": "{\n  \"issue\": {\n    \"key\": \"PRJ-2\",\n    \"fields\": {\n      \"summary\": \"Commented\",\n      \"description\": \"desc\",\n      \"priority\": {\"name\": \"High\"},\n      \"assignee\": {\"displayName\": \"Bob\"},\n      \"issuetype\": {\"name\": \"Task\"},\n      \"status\": {\"name\": \"Open\"}\n    }\n  },\n  \"comment\": {\n    \"body\": \"looks good\",\n    \"author\": {\"displayName\": \"Alice\"}\n  }\n}\n",
-          "options": {"raw": {"language": "json"}}
+          "raw": "{\n  \"issue\": {\n    \"key\": \"PRJ-2\",\n    \"fields\": {\n      \"summary\": \"Commented issue with https://summary.example.com\",\n      \"description\": \"See https://jira.example.com/browse/PRJ-2 and https://docs.example.com\",\n      \"priority\": {\"name\": \"High\"},\n      \"assignee\": {\"displayName\": \"Bob\"},\n      \"issuetype\": {\"name\": \"Task\"},\n      \"status\": {\"name\": \"Open\"}\n    }\n  },\n  \"comment\": {\n    \"body\": \"looks good. See https://comment.example.com and https://another-comment.example.com\",\n    \"author\": {\"displayName\": \"Alice\"}\n  }\n}\n",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
         }
       },
-      "event": [{"listen": "test", "script": {"exec": ["pm.test(\"Status code is 200\", function () {", "    pm.response.to.have.status(200);", "});"]}}]
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});"
+            ]
+          }
+        }
+      ]
     },
     {
       "name": "Changelog Event",
       "request": {
         "method": "POST",
         "header": [
-          {"key": "Content-Type", "value": "application/json"}
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
         ],
-        "url": {"raw": "{{base_url}}/webhook", "host": ["{{base_url}}"], "path": ["webhook"]},
+        "url": {
+          "raw": "{{base_url}}/webhook",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "webhook"
+          ]
+        },
         "body": {
           "mode": "raw",
-          "raw": "{\n  \"issue\": {\n    \"key\": \"PRJ-3\",\n    \"fields\": {\n      \"summary\": \"Change\",\n      \"description\": \"desc\",\n      \"priority\": {\"name\": \"High\"},\n      \"assignee\": {\"displayName\": \"Bob\"},\n      \"issuetype\": {\"name\": \"Task\"},\n      \"status\": {\"name\": \"Closed\"}\n    }\n  },\n  \"changelog\": {\n    \"items\": [\n      {\"field\": \"status\", \"fromString\": \"Open\", \"toString\": \"Closed\"}\n    ]\n  }\n}\n",
-          "options": {"raw": {"language": "json"}}
+          "raw": "{\n  \"issue\": {\n    \"key\": \"PRJ-3\",\n    \"fields\": {\n      \"summary\": \"Change issue with https://summary.example.com\",\n      \"description\": \"See https://jira.example.com/browse/PRJ-3 and https://docs.example.com\",\n      \"priority\": {\"name\": \"High\"},\n      \"assignee\": {\"displayName\": \"Bob\"},\n      \"issuetype\": {\"name\": \"Task\"},\n      \"status\": {\"name\": \"Closed\"}\n    }\n  },\n  \"changelog\": {\n    \"items\": [\n      {\"field\": \"status\", \"fromString\": \"Open\", \"toString\": \"Closed\"}\n    ]\n  }\n}\n",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
         }
       },
-      "event": [{"listen": "test", "script": {"exec": ["pm.test(\"Status code is 200\", function () {", "    pm.response.to.have.status(200);", "});"]}}]
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});"
+            ]
+          }
+        }
+      ]
     },
     {
       "name": "Comment & Changelog Event",
       "request": {
         "method": "POST",
         "header": [
-          {"key": "Content-Type", "value": "application/json"}
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
         ],
-        "url": {"raw": "{{base_url}}/webhook", "host": ["{{base_url}}"], "path": ["webhook"]},
+        "url": {
+          "raw": "{{base_url}}/webhook",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "webhook"
+          ]
+        },
         "body": {
           "mode": "raw",
-          "raw": "{\n  \"issue\": {\n    \"key\": \"PRJ-4\",\n    \"fields\": {\n      \"summary\": \"Comment and Change\",\n      \"description\": \"desc\",\n      \"priority\": {\"name\": \"High\"},\n      \"assignee\": {\"displayName\": \"Bob\"},\n      \"issuetype\": {\"name\": \"Task\"},\n      \"status\": {\"name\": \"Closed\"}\n    }\n  },\n  \"comment\": {\n    \"body\": \"needs work\",\n    \"author\": {\"displayName\": \"Alice\"}\n  },\n  \"changelog\": {\n    \"items\": [\n      {\"field\": \"status\", \"fromString\": \"Open\", \"toString\": \"Closed\"}\n    ]\n  }\n}\n",
-          "options": {"raw": {"language": "json"}}
+          "raw": "{\n  \"issue\": {\n    \"key\": \"PRJ-4\",\n    \"fields\": {\n      \"summary\": \"Comment and Change issue with https://summary.example.com\",\n      \"description\": \"See https://jira.example.com/browse/PRJ-4 and https://docs.example.com\",\n      \"priority\": {\"name\": \"High\"},\n      \"assignee\": {\"displayName\": \"Bob\"},\n      \"issuetype\": {\"name\": \"Task\"},\n      \"status\": {\"name\": \"Closed\"}\n    }\n  },\n  \"comment\": {\n    \"body\": \"needs work. See https://comment.example.com and https://another-comment.example.com\",\n    \"author\": {\"displayName\": \"Alice\"}\n  },\n  \"changelog\": {\n    \"items\": [\n      {\"field\": \"status\", \"fromString\": \"Open\", \"toString\": \"Closed\"}\n    ]\n  }\n}\n",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
         }
       },
-      "event": [{"listen": "test", "script": {"exec": ["pm.test(\"Status code is 200\", function () {", "    pm.response.to.have.status(200);", "});"]}}]
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});"
+            ]
+          }
+        }
+      ]
     }
   ]
 }
