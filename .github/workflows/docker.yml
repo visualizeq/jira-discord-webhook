@@ -40,9 +40,8 @@ jobs:
       - name: Run tests
         id: tests
         run: |
-          go test -json ./... -coverprofile=coverage.out > /tmp/go-test.json
+          go test -json ./... -cover -coverprofile=coverage.out > /tmp/go-test.json
           tparse -all -file /tmp/go-test.json | tee /tmp/test.log
-          go tool cover -func=coverage.out | tee -a /tmp/test.log
 
       - name: Upload coverage
         if: always()
@@ -62,15 +61,16 @@ jobs:
         id: tags
         run: |
           SHORT_SHA=$(git rev-parse --short=7 "$GITHUB_SHA")
+          IMAGE=ghcr.io/visualizeq/jira-discord-webhook
           if [[ "${GITHUB_EVENT_NAME}" == "pull_request" ]]; then
             TAGS=""
           elif [[ "${GITHUB_REF}" == "refs/heads/main" ]]; then
-            TAGS="main"
+            TAGS="$IMAGE:main"
           elif [[ "${GITHUB_REF}" == "refs/heads/develop" ]]; then
-            TAGS="develop"
+            TAGS="$IMAGE:develop"
           elif [[ "${GITHUB_REF}" == refs/tags/* ]]; then
             TAG_NAME="${GITHUB_REF#refs/tags/}"
-            TAGS=$'main\n'"${TAG_NAME}"
+            TAGS="$IMAGE:main\n$IMAGE:${TAG_NAME}"
           else
             TAGS=""
           fi
@@ -84,4 +84,44 @@ jobs:
           platforms: linux/amd64,linux/arm64
           push: true
           tags: |
-            ghcr.io/visualizeq/jira-discord-webhook:${{ steps.tags.outputs.tags }}
+            ${{ steps.tags.outputs.tags }}
+
+  release:
+    needs: docker
+    if: needs.docker.result == 'success' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/'))
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ github.repository }}
+          ref: ${{ github.sha }}
+
+      - name: Generate release notes
+        id: cliff
+        uses: orhun/git-cliff-action@v2
+        with:
+          config: cliff.toml
+          output: release.md
+
+      - name: Check release notes
+        run: test -f release.md
+
+      - name: Set tag name
+        id: vars
+        run: |
+          git fetch --tags
+          if git describe --tags --exact-match >/dev/null 2>&1; then
+            TAG=$(git describe --tags --exact-match)
+          else
+            TAG=main
+          fi
+          echo "tag=${TAG}" >> "$GITHUB_OUTPUT"
+
+      - name: Create release
+        uses: softprops/action-gh-release@v1
+        with:
+          body_path: release.md
+          tag_name: ${{ steps.vars.outputs.tag }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
