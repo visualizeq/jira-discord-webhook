@@ -35,46 +35,49 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Install tparse
-        run: go install github.com/mfridman/tparse@v0.17.0
+        run: go install github.com/mfridman/tparse@latest
 
       - name: Run tests
         id: tests
         run: |
-          go test -json ./... -cover -coverprofile=coverage.out > /tmp/go-test.json
-          tparse -all -file /tmp/go-test.json | tee /tmp/test.log
+          mkdir -p .ci-artifacts
+          set -o pipefail && go test -json ./... -cover -coverprofile=.ci-artifacts/coverage.out > .ci-artifacts/go-test.json
+          tparse -nocolor -all -file .ci-artifacts/go-test.json | tee .ci-artifacts/test.log
 
       - name: Upload coverage
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: coverage
-          path: coverage.out
+          path: .ci-artifacts/coverage.out
 
       - name: Add test summary
         if: always()
         run: |
           echo '```' >> "$GITHUB_STEP_SUMMARY"
-          cat /tmp/test.log >> "$GITHUB_STEP_SUMMARY"
+          cat .ci-artifacts/test.log >> "$GITHUB_STEP_SUMMARY"
           echo '```' >> "$GITHUB_STEP_SUMMARY"
 
       - name: Determine image tags
         id: tags
         run: |
-          SHORT_SHA=$(git rev-parse --short=7 "$GITHUB_SHA")
           IMAGE=ghcr.io/visualizeq/jira-discord-webhook
+          TAGS=()
           if [[ "${GITHUB_EVENT_NAME}" == "pull_request" ]]; then
-            TAGS=""
+            :
           elif [[ "${GITHUB_REF}" == "refs/heads/main" ]]; then
-            TAGS="$IMAGE:main"
+            TAGS+=("$IMAGE:main")
           elif [[ "${GITHUB_REF}" == "refs/heads/develop" ]]; then
-            TAGS="$IMAGE:develop"
+            TAGS+=("$IMAGE:develop")
           elif [[ "${GITHUB_REF}" == refs/tags/* ]]; then
             TAG_NAME="${GITHUB_REF#refs/tags/}"
-            TAGS="$IMAGE:main\n$IMAGE:${TAG_NAME}"
-          else
-            TAGS=""
+            TAGS+=("$IMAGE:main" "$IMAGE:${TAG_NAME}")
           fi
-          echo -e "tags=${TAGS}" >> "$GITHUB_OUTPUT"
+          {
+            echo "tags<<EOF"
+            printf "%s\n" "${TAGS[@]}"
+            echo "EOF"
+          } >> "$GITHUB_OUTPUT"
 
       - name: Build and push
         if: steps.tags.outputs.tags != ''
