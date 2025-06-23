@@ -3,7 +3,7 @@ owner = "visualizeq"
 repo = "jira-discord-webhook"
 
 [changelog]
-template = "github"
+# template = "github"
 trim = true
 
 
