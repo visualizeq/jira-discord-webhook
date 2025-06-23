@@ -23,9 +23,7 @@ func colorFromEnv(name string, def int) int {
 	if val == "" {
 		return def
 	}
-	if strings.HasPrefix(val, "#") {
-		val = val[1:]
-	}
+	val = strings.TrimPrefix(val, "#")
 	v, err := strconv.ParseInt(val, 0, 32)
 	if err != nil {
 		return def
@@ -41,6 +39,14 @@ func Capitalize(s string) string {
 	return strings.ToUpper(s[:1]) + strings.ToLower(s[1:])
 }
 
+// truncateString ensures a string does not exceed max length.
+func truncateString(s string, max int) string {
+	if len(s) > max {
+		return s[:max]
+	}
+	return s
+}
+
 // ToDiscordMessage converts a Jira webhook payload into a Discord message.
 func ToDiscordMessage(w Webhook, baseURL string) discord.WebhookMessage {
 	issueURL := ""
@@ -48,9 +54,27 @@ func ToDiscordMessage(w Webhook, baseURL string) discord.WebhookMessage {
 		issueURL = fmt.Sprintf("%s/%s", strings.TrimRight(baseURL, "/"), w.Issue.Key)
 	}
 
+	// Discord embed limits
+	const (
+		titleMax      = 256
+		descMax       = 4096
+		fieldNameMax  = 256
+		fieldValueMax = 1024
+		maxFields     = 25
+	)
+
+	title := truncateString(fmt.Sprintf("%s: %s", w.Issue.Key, w.Issue.Fields.Summary), titleMax)
+	var desc string
+	if w.Comment != nil {
+		desc = truncateString(w.Comment.Body, descMax)
+	} else {
+		desc = truncateString(w.Issue.Fields.Description, descMax)
+	}
+
 	embed := discord.Embed{
-		Title: fmt.Sprintf("%s: %s", w.Issue.Key, w.Issue.Fields.Summary),
-		URL:   issueURL,
+		Title:       title,
+		URL:         issueURL,
+		Description: desc,
 	}
 	switch {
 	case w.Comment != nil && w.Changelog != nil:
@@ -62,13 +86,25 @@ func ToDiscordMessage(w Webhook, baseURL string) discord.WebhookMessage {
 	default:
 		embed.Color = colorFromEnv("ISSUE_COLOR", issueColor)
 	}
-	embed.Description = w.Issue.Fields.Description
+
+	// Add Description as a separate field if present
+	if desc != "" {
+		embed.Fields = append(embed.Fields, discord.Field{
+			Name:   truncateString("Description", fieldNameMax),
+			Value:  truncateString(desc, fieldValueMax),
+			Inline: false,
+		})
+	}
 
 	if w.Comment != nil {
-		embed.Description = w.Comment.Body
 		embed.Fields = append(embed.Fields, discord.Field{
-			Name:   "Comment by",
-			Value:  w.Comment.Author.DisplayName,
+			Name:   truncateString("Comment", fieldNameMax),
+			Value:  truncateString(w.Comment.Body, fieldValueMax),
+			Inline: false,
+		})
+		embed.Fields = append(embed.Fields, discord.Field{
+			Name:   truncateString("Comment by", fieldNameMax),
+			Value:  truncateString(w.Comment.Author.DisplayName, fieldValueMax),
 			Inline: true,
 		})
 	}
@@ -83,24 +119,33 @@ func ToDiscordMessage(w Webhook, baseURL string) discord.WebhookMessage {
 			if strings.ToLower(item.Field) == "status" {
 				name = "Status"
 			}
+			var change string
 			if item.FromString == "" {
-				changes = append(changes, fmt.Sprintf("%s set to %s", name, item.ToString))
+				change = fmt.Sprintf("%s set to %s", name, item.ToString)
 			} else {
-				changes = append(changes, fmt.Sprintf("%s: %s → %s", name, item.FromString, item.ToString))
+				change = fmt.Sprintf("%s: %s → %s", name, item.FromString, item.ToString)
 			}
+			changes = append(changes, truncateString(change, fieldValueMax))
 		}
 		if len(changes) > 0 {
-			embed.Fields = append(embed.Fields, discord.Field{
-				Name:  "Changes",
-				Value: strings.Join(changes, "\n"),
-			})
+			field := discord.Field{
+				Name:  truncateString("Changes", fieldNameMax),
+				Value: truncateString(strings.Join(changes, "\n"), fieldValueMax),
+			}
+			embed.Fields = append(embed.Fields, field)
 		}
 	}
 
-	embed.Fields = append(embed.Fields, discord.Field{Name: "Priority", Value: w.Issue.Fields.Priority.Name, Inline: true})
-	embed.Fields = append(embed.Fields, discord.Field{Name: "Assignee", Value: w.Issue.Fields.Assignee.DisplayName, Inline: true})
-	embed.Fields = append(embed.Fields, discord.Field{Name: "Status", Value: w.Issue.Fields.Status.Name, Inline: true})
-	embed.Fields = append(embed.Fields, discord.Field{Name: "Type", Value: w.Issue.Fields.Issuetype.Name, Inline: true})
+	// Inline fields: show as plain text, no markdown link
+	embed.Fields = append(embed.Fields, discord.Field{Name: "Priority", Value: truncateString(w.Issue.Fields.Priority.Name, fieldValueMax), Inline: true})
+	embed.Fields = append(embed.Fields, discord.Field{Name: "Assignee", Value: truncateString(w.Issue.Fields.Assignee.DisplayName, fieldValueMax), Inline: true})
+	embed.Fields = append(embed.Fields, discord.Field{Name: "Status", Value: truncateString(w.Issue.Fields.Status.Name, fieldValueMax), Inline: true})
+	embed.Fields = append(embed.Fields, discord.Field{Name: "Type", Value: truncateString(w.Issue.Fields.Issuetype.Name, fieldValueMax), Inline: true})
+
+	// Discord allows max 25 fields
+	if len(embed.Fields) > maxFields {
+		embed.Fields = embed.Fields[:maxFields]
+	}
 
 	return discord.WebhookMessage{
 		Username: "Jira",

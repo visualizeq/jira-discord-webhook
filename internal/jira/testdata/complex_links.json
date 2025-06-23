@@ -1,0 +1,46 @@
+{
+    "issue": {
+        "key": "PRJ-99",
+        "fields": {
+            "summary": "Test issue with links and a long summary:\nThis is a very long summary for testing purposes.\nPlease visit https://long-summary.example.com for more information about this issue,\nand also check https://another-link.example.com for related docs.\nYou can also see https://multiline-summary.example.com for more.\nEnd of summary.",
+            "description": "See https://jira.example.com/browse/PRJ-99 and https://docs.example.com for details.\nThis description is intentionally long to test the markdown link formatting.\nFor troubleshooting, refer to https://troubleshoot.example.com and https://support.example.com.\nAdditional resources:\n- https://resources.example.com/guide\n- https://resources.example.com/faq\n\nThis is a multiline description.\nCheck https://multiline-description.example.com for more info.\nEnd of description.",
+            "priority": {
+                "name": "High https://priority.example.com"
+            },
+            "assignee": {
+                "displayName": "Bob https://user.example.com/bob"
+            },
+            "issuetype": {
+                "name": "Task https://type.example.com/task"
+            },
+            "status": {
+                "name": "Open https://status.example.com/open"
+            }
+        }
+    },
+    "comment": {
+        "body": "Check this out: https://comment.example.com and also https://another.example.com",
+        "author": {
+            "displayName": "Alice https://user.example.com/alice"
+        }
+    },
+    "changelog": {
+        "items": [
+            {
+                "field": "status",
+                "fromString": "Open https://status.example.com/open",
+                "toString": "Closed https://status.example.com/closed"
+            },
+            {
+                "field": "priority",
+                "fromString": "Low https://priority.example.com/low",
+                "toString": "High https://priority.example.com/high"
+            },
+            {
+                "field": "customfield_123",
+                "fromString": "foo https://foo.example.com",
+                "toString": "bar https://bar.example.com"
+            }
+        ]
+    }
+}

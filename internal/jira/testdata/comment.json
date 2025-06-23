@@ -2,16 +2,26 @@
   "issue": {
     "key": "PRJ-2",
     "fields": {
-      "summary": "Commented",
-      "description": "desc",
-      "priority": {"name": "High"},
-      "assignee": {"displayName": "Bob"},
-      "issuetype": {"name": "Task"},
-      "status": {"name": "Open"}
+      "summary": "Commented issue",
+      "description": "",
+      "priority": {
+        "name": "High"
+      },
+      "assignee": {
+        "displayName": "Bob"
+      },
+      "issuetype": {
+        "name": "Task"
+      },
+      "status": {
+        "name": "Open"
+      }
     }
   },
   "comment": {
     "body": "looks good",
-    "author": {"displayName": "Alice"}
+    "author": {
+      "displayName": "Alice"
+    }
   }
 }

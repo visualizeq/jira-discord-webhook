@@ -3,11 +3,19 @@
     "key": "PRJ-1",
     "fields": {
       "summary": "Test issue",
-      "description": "desc",
-      "priority": {"name": "High"},
-      "assignee": {"displayName": "Bob"},
-      "issuetype": {"name": "Task"},
-      "status": {"name": "Open"}
+      "description": "",
+      "priority": {
+        "name": "High"
+      },
+      "assignee": {
+        "displayName": "Bob"
+      },
+      "issuetype": {
+        "name": "Task"
+      },
+      "status": {
+        "name": "Open"
+      }
     }
   }
 }

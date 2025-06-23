@@ -2,17 +2,29 @@
   "issue": {
     "key": "PRJ-3",
     "fields": {
-      "summary": "Change",
-      "description": "desc",
-      "priority": {"name": "High"},
-      "assignee": {"displayName": "Bob"},
-      "issuetype": {"name": "Task"},
-      "status": {"name": "Closed"}
+      "summary": "Change issue",
+      "description": "",
+      "priority": {
+        "name": "High"
+      },
+      "assignee": {
+        "displayName": "Bob"
+      },
+      "issuetype": {
+        "name": "Task"
+      },
+      "status": {
+        "name": "Closed"
+      }
     }
   },
   "changelog": {
     "items": [
-      {"field": "status", "fromString": "Open", "toString": "Closed"}
+      {
+        "field": "status",
+        "fromString": "Open",
+        "toString": "Closed"
+      }
     ]
   }
 }

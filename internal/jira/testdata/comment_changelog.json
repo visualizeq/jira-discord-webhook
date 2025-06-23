@@ -2,21 +2,35 @@
   "issue": {
     "key": "PRJ-4",
     "fields": {
-      "summary": "Comment and Change",
-      "description": "desc",
-      "priority": {"name": "High"},
-      "assignee": {"displayName": "Bob"},
-      "issuetype": {"name": "Task"},
-      "status": {"name": "Closed"}
+      "summary": "Comment and Change issue",
+      "description": "",
+      "priority": {
+        "name": "High"
+      },
+      "assignee": {
+        "displayName": "Bob"
+      },
+      "issuetype": {
+        "name": "Task"
+      },
+      "status": {
+        "name": "Closed"
+      }
     }
   },
   "comment": {
     "body": "needs work",
-    "author": {"displayName": "Alice"}
+    "author": {
+      "displayName": "Alice"
+    }
   },
   "changelog": {
     "items": [
-      {"field": "status", "fromString": "Open", "toString": "Closed"}
+      {
+        "field": "status",
+        "fromString": "Open",
+        "toString": "Closed"
+      }
     ]
   }
 }

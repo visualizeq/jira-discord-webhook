@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"os"
 	"path/filepath"
+	"strings"
 	"testing"
 )
 
@@ -106,5 +107,34 @@ func TestToDiscordMessageColorFromEnv(t *testing.T) {
 	msg := ToDiscordMessage(w, "")
 	if msg.Embeds[0].Color != 0x123456 {
 		t.Fatalf("env color not applied")
+	}
+}
+
+func TestToDiscordMessage_EmptyFields(t *testing.T) {
+	w := Webhook{
+		Issue: Issue{Key: "PRJ-EMPTY"},
+	}
+	msg := ToDiscordMessage(w, "")
+	if msg.Embeds[0].Title != "PRJ-EMPTY: " {
+		t.Fatalf("unexpected title: %s", msg.Embeds[0].Title)
+	}
+	if msg.Embeds[0].Description != "" {
+		t.Fatalf("expected empty description")
+	}
+}
+
+func TestToDiscordMessage_LongFields(t *testing.T) {
+	long := strings.Repeat("A", 300)
+	w := Webhook{
+		Issue: Issue{Key: long},
+	}
+	w.Issue.Fields.Summary = long
+	w.Issue.Fields.Description = long
+	msg := ToDiscordMessage(w, "")
+	if len(msg.Embeds[0].Title) > 256 {
+		t.Fatalf("title too long")
+	}
+	if len(msg.Embeds[0].Description) > 4096 {
+		t.Fatalf("description too long")
 	}
 }
