@@ -69,7 +69,7 @@ func ToDiscordMessage(w Webhook, baseURL string) discord.WebhookMessage {
 	if w.Comment != nil {
 		desc = ""
 	} else {
-		desc = truncateString(JiraToMarkdown(w.Issue.Fields.Description), descMax)
+		desc = truncateString(utils.DiscordMentionForJiraUser(JiraToMarkdown(w.Issue.Fields.Description)), descMax)
 	}
 
 	embed := discord.Embed{
@@ -122,9 +122,9 @@ func ToDiscordMessage(w Webhook, baseURL string) discord.WebhookMessage {
 			}
 			var change string
 			if item.FromString == "" {
-				change = fmt.Sprintf("%s set to %s", name, item.ToString)
+				change = fmt.Sprintf("%s set to %s", name, utils.DiscordMentionForJiraUser(item.ToString))
 			} else {
-				change = fmt.Sprintf("%s: %s → %s", name, item.FromString, item.ToString)
+				change = fmt.Sprintf("%s: %s → %s", name, utils.DiscordMentionForJiraUser(item.FromString), utils.DiscordMentionForJiraUser(item.ToString))
 			}
 			changes = append(changes, truncateString(change, fieldValueMax))
 		}
