@@ -6,16 +6,16 @@ The server formats issue updates, comments, and transitions into Discord embeds 
 ## Building
 
 ```bash
-go build
+go build ./cmd
 ```
 
 ## Running
 
-Set the `DISCORD_WEBHOOK_URL` environment variable to your Discord webhook and start the server. You can export the variables in your shell or create a `.env` file:
+Set the `DISCORD_WEBHOOK_URL` environment variable to your Discord webhook and start the server:
 
 ```bash
 export DISCORD_WEBHOOK_URL="https://discord.com/api/webhooks/..."
-go run .
+go run ./cmd
 ```
 
 Copy `.env.example` to `.env` to provide the required variables without exporting them manually.
