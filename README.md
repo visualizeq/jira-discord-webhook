@@ -3,6 +3,17 @@
 This project provides a small HTTP server written in Go that receives Jira webhook events and forwards them to a Discord webhook.
 The server formats issue updates, comments, and transitions into Discord embeds so you can easily track activity from Jira.
 
+## Features
+
+- **Robust Jira wiki/advanced formatting to Markdown/Discord:**
+  - Converts Jira wiki-style links (e.g. `[text|http://example.com]`) to Markdown links for Discord.
+  - Supports bold (`+bold+`), italics (`*italic*`), underline (`_underline_`), strikethrough (`-strike-`), monospace/code (`{{code}}`), blockquote (`bq. quote`), and removes color markup.
+  - Handles advanced blocks: `{noformat}...{noformat}` (as code), `{panel:title=...}...{panel}` (as Discord-styled block), `{code[:lang]}...{code}` (as fenced code block with language).
+  - All formatting is tested for edge cases and multi-line content.
+- Handles empty comment bodies gracefully (empty comments will result in empty Discord descriptions).
+- Debug logging for incoming Jira payloads and outgoing Discord payloads (set logger to debug level to see raw payloads).
+- Comprehensive unit tests for all formatting and handler logic.
+
 ## Building
 
 ```bash
