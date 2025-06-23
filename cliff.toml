@@ -6,6 +6,10 @@ repo = "jira-discord-webhook"
 template = "github"
 trim = true
 
+
+header = """
+"""
+
 body = """
 {%- macro remote_url() -%}
   https://github.com/{{ remote.github.owner }}/{{ remote.github.repo }}
@@ -63,7 +67,7 @@ footer = """
 # An array of regex based postprocessors to modify the changelog.
 postprocessors = [
   # Replace the placeholder `<REPO>` with a URL.
-  { pattern = '<REPO>', replace = "https://github.com/orhun/git-cliff" }, # replace repository URL
+  { pattern = '<REPO>', replace = "https://github.com/visualizeq/jira-discord-webhook" },
 ]
 
 
