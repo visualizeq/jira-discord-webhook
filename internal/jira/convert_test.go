@@ -40,9 +40,6 @@ func TestToDiscordMessageComment(t *testing.T) {
 	os.Unsetenv("COMMENT_COLOR")
 	w := loadWebhook(t, "comment.json")
 	msg := ToDiscordMessage(w, "")
-	if msg.Embeds[0].Description != "looks good" {
-		t.Fatalf("expected comment body")
-	}
 	var found bool
 	for _, f := range msg.Embeds[0].Fields {
 		if f.Name == "Comment by" && f.Value == "Alice" {
@@ -80,9 +77,6 @@ func TestToDiscordMessageCommentChangelog(t *testing.T) {
 	os.Unsetenv("COMMENT_CHANGELOG_COLOR")
 	w := loadWebhook(t, "comment_changelog.json")
 	msg := ToDiscordMessage(w, "")
-	if msg.Embeds[0].Description != "needs work" {
-		t.Fatalf("expected comment body")
-	}
 	var hasAuthor, hasChange bool
 	for _, f := range msg.Embeds[0].Fields {
 		if f.Name == "Comment by" && f.Value == "Alice" {
@@ -136,5 +130,16 @@ func TestToDiscordMessage_LongFields(t *testing.T) {
 	}
 	if len(msg.Embeds[0].Description) > 4096 {
 		t.Fatalf("description too long")
+	}
+}
+
+func TestToDiscordMessage_EmptyCommentBody(t *testing.T) {
+	w := Webhook{
+		Issue:   Issue{Key: "PRJ-EMPTY-COMMENT"},
+		Comment: &Comment{Body: ""},
+	}
+	msg := ToDiscordMessage(w, "")
+	if msg.Embeds[0].Description != "" {
+		t.Fatalf("expected empty description for empty comment body")
 	}
 }

@@ -66,15 +66,15 @@ func ToDiscordMessage(w Webhook, baseURL string) discord.WebhookMessage {
 	title := truncateString(fmt.Sprintf("%s: %s", w.Issue.Key, w.Issue.Fields.Summary), titleMax)
 	var desc string
 	if w.Comment != nil {
-		desc = truncateString(w.Comment.Body, descMax)
+		desc = ""
 	} else {
-		desc = truncateString(w.Issue.Fields.Description, descMax)
+		desc = truncateString(JiraToMarkdown(w.Issue.Fields.Description), descMax)
 	}
 
 	embed := discord.Embed{
 		Title:       title,
 		URL:         issueURL,
-		Description: desc,
+		Description: "",
 	}
 	switch {
 	case w.Comment != nil && w.Changelog != nil:
@@ -99,7 +99,7 @@ func ToDiscordMessage(w Webhook, baseURL string) discord.WebhookMessage {
 	if w.Comment != nil {
 		embed.Fields = append(embed.Fields, discord.Field{
 			Name:   truncateString("Comment", fieldNameMax),
-			Value:  truncateString(w.Comment.Body, fieldValueMax),
+			Value:  truncateString(JiraToMarkdown(w.Comment.Body), fieldValueMax),
 			Inline: false,
 		})
 		embed.Fields = append(embed.Fields, discord.Field{
