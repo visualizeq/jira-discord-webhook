@@ -37,6 +37,9 @@ jobs:
       - name: Install tparse
         run: go install github.com/mfridman/tparse@latest
 
+      - name: Add Go bin to PATH
+        run: echo "$HOME/go/bin" >> $GITHUB_PATH
+
       - name: Run tests
         id: tests
         run: |
