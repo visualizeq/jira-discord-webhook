@@ -103,15 +103,17 @@ jobs:
           repository: ${{ github.repository }}
           ref: ${{ github.sha }}
 
-      - name: Generate release notes
-        id: cliff
-        uses: orhun/git-cliff-action@v3
+      - name: Generate a changelog
+        uses: orhun/git-cliff-action@v4
+        id: git-cliff
         with:
           config: cliff.toml
-          args: -o release.md
+          args: --verbose
+        env:
+          OUTPUT: CHANGELOG.md
 
-      - name: Check release notes
-        run: test -f release.md
+      - name: Print the changelog
+        run: cat "${{ steps.git-cliff.outputs.changelog }}"
 
       - name: Set tag name
         id: vars
@@ -125,9 +127,9 @@ jobs:
           echo "tag=${TAG}" >> "$GITHUB_OUTPUT"
 
       - name: Create release
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         with:
-          body_path: release.md
+          body_path: ${{ steps.git-cliff.outputs.changelog }}
           tag_name: ${{ steps.vars.outputs.tag }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
