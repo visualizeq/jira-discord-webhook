@@ -117,7 +117,7 @@ jobs:
       - name: Set tag name
         id: vars
         run: |
-          git fetch --tags
+          git fetch --tags --force
           if git describe --tags --exact-match >/dev/null 2>&1; then
             TAG=$(git describe --tags --exact-match)
           else
