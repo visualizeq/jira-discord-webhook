@@ -13,6 +13,60 @@ The server formats issue updates, comments, and transitions into Discord embeds 
 - Handles empty comment bodies gracefully (empty comments will result in empty Discord descriptions).
 - Debug logging for incoming Jira payloads and outgoing Discord payloads (set logger to debug level to see raw payloads).
 - Comprehensive unit tests for all formatting and handler logic.
+- **Jira to Discord user mention mapping:**
+  - Supports mapping Jira display names to Discord user IDs using a TOML config file (see `USER_MAPPING_PATH`).
+  - When a Jira user matches the mapping, Discord mentions (e.g. `<@123456789>`) are used in notifications.
+
+## Configuration
+
+Set the following environment variables (see `.env.example`):
+
+- `DISCORD_WEBHOOK_URL`: Your Discord webhook URL
+- `JIRA_BASE_URL`: Base URL for your Jira instance
+- `USER_MAPPING_PATH`: Path to the Jira-to-Discord user mapping TOML file (default: `config/user_mapping.toml`)
+- Other variables for port and color customization
+
+## Docker Compose
+
+To use a custom user mapping file with Docker Compose, add a volume mapping in your `compose.yml`:
+
+```yaml
+services:
+  jira-discord-webhook:
+    # ...existing config...
+    environment:
+      - USER_MAPPING_PATH=/config/user_mapping.toml
+    volumes:
+      - ./config/user_mapping.toml:/config/user_mapping.toml:ro
+```
+
+This ensures the container uses your local `config/user_mapping.toml` for user mapping.
+
+## Docker Compose Example
+
+Here is a complete example of a `compose.yml` for this project:
+
+```yaml
+version: '3.8'
+services:
+  jira-discord-webhook:
+    image: ghcr.io/visualizeq/jira-discord-webhook:develop
+    environment:
+      - DISCORD_WEBHOOK_URL=${DISCORD_WEBHOOK_URL}
+      - JIRA_BASE_URL=${JIRA_BASE_URL}
+      - ISSUE_COLOR=${ISSUE_COLOR-0x00B0F4}
+      - COMMENT_COLOR=${COMMENT_COLOR-0x347433}
+      - CHANGELOG_COLOR=${CHANGELOG_COLOR-0xFF6F3C}
+      - COMMENT_CHANGELOG_COLOR=${COMMENT_CHANGELOG_COLOR-0x5409DA}
+      - USER_MAPPING_PATH=/config/user_mapping.toml
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./config/user_mapping.toml:/config/user_mapping.toml:ro
+    restart: always
+```
+
+This configuration ensures your local `config/user_mapping.toml` is available in the container and all required environment variables are set.
 
 ## Building
 

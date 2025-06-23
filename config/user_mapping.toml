@@ -1,0 +1,6 @@
+# Jira to Discord user mapping
+# Format: "Jira Name" = "Discord User ID"
+[RFC3986]
+
+[jira_to_discord]
+"Example User" = "123456789012345678"

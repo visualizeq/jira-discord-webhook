@@ -243,3 +243,15 @@ func TestMain_LogLevelVariants(t *testing.T) {
 		})
 	}
 }
+
+func TestMain(m *testing.M) {
+	tmp := "test_user_mapping.toml"
+	toml := `[jira_to_discord]
+"Test User" = "999"
+`
+	_ = os.WriteFile(tmp, []byte(toml), 0644)
+	os.Setenv("USER_MAPPING_PATH", tmp)
+	code := m.Run()
+	_ = os.Remove(tmp)
+	os.Exit(code)
+}

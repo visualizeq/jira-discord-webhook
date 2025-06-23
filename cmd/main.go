@@ -10,6 +10,7 @@ import (
 	"go.uber.org/zap"
 
 	"jira-discord-webhook/internal/handler"
+	"jira-discord-webhook/internal/utils"
 )
 
 func main() {
@@ -46,6 +47,13 @@ func main() {
 	port := os.Getenv("PORT")
 	if port == "" {
 		port = "8080"
+	}
+	userMappingPath := os.Getenv("USER_MAPPING_PATH")
+	if userMappingPath == "" {
+		userMappingPath = "config/user_mapping.toml"
+	}
+	if err := utils.LoadUserMapping(userMappingPath); err != nil {
+		log.Fatalf("failed to load user mapping: %v", err)
 	}
 	log.Fatal(app.Listen(":" + port))
 }

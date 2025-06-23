@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	"jira-discord-webhook/internal/discord"
+	"jira-discord-webhook/internal/utils"
 )
 
 const (
@@ -104,7 +105,7 @@ func ToDiscordMessage(w Webhook, baseURL string) discord.WebhookMessage {
 		})
 		embed.Fields = append(embed.Fields, discord.Field{
 			Name:   truncateString("Comment by", fieldNameMax),
-			Value:  truncateString(w.Comment.Author.DisplayName, fieldValueMax),
+			Value:  truncateString(utils.DiscordMentionForJiraUser(w.Comment.Author.DisplayName), fieldValueMax),
 			Inline: true,
 		})
 	}
@@ -138,7 +139,7 @@ func ToDiscordMessage(w Webhook, baseURL string) discord.WebhookMessage {
 
 	// Inline fields: show as plain text, no markdown link
 	embed.Fields = append(embed.Fields, discord.Field{Name: "Priority", Value: truncateString(w.Issue.Fields.Priority.Name, fieldValueMax), Inline: true})
-	embed.Fields = append(embed.Fields, discord.Field{Name: "Assignee", Value: truncateString(w.Issue.Fields.Assignee.DisplayName, fieldValueMax), Inline: true})
+	embed.Fields = append(embed.Fields, discord.Field{Name: "Assignee", Value: truncateString(utils.DiscordMentionForJiraUser(w.Issue.Fields.Assignee.DisplayName), fieldValueMax), Inline: true})
 	embed.Fields = append(embed.Fields, discord.Field{Name: "Status", Value: truncateString(w.Issue.Fields.Status.Name, fieldValueMax), Inline: true})
 	embed.Fields = append(embed.Fields, discord.Field{Name: "Type", Value: truncateString(w.Issue.Fields.Issuetype.Name, fieldValueMax), Inline: true})
 
