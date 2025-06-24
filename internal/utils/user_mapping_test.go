@@ -57,20 +57,43 @@ func TestReplaceJiraMentionsWithDiscord(t *testing.T) {
 	in := "Hello [~accountid:accid1]!"
 	want := "Hello <@111111111111111111>!"
 	if got := ReplaceJiraMentionsWithDiscord(in); got != want {
-		t.Errorf("got %q, want %q", got, want)
+		t.Errorf("singleAccountIdMention: got %q, want %q", got, want)
 	}
 
 	// Test multiple accountId mentions
 	in = "[~accountid:accid1] and [~accountid:accid2] are here."
 	want = "<@111111111111111111> and <@222222222222222222> are here."
 	if got := ReplaceJiraMentionsWithDiscord(in); got != want {
-		t.Errorf("got %q, want %q", got, want)
+		t.Errorf("multipleAccountIdMentions: got %q, want %q", got, want)
 	}
 
 	// Test unknown accountId
 	in = "Hi [~accountid:unknown]!"
 	want = "Hi unknown!" // The current implementation falls back to the key if not found
 	if got := ReplaceJiraMentionsWithDiscord(in); got != want {
-		t.Errorf("got %q, want %q", got, want)
+		t.Errorf("unknownAccountId: got %q, want %q", got, want)
+	}
+}
+
+func TestProtectDomains(t *testing.T) {
+	tests := []struct {
+		name string
+		in   string
+		out  string
+	}{
+		{"bulletDomain", "* a-b-c-d-e.abc.com (111.222.232.98)", "* `a-b-c-d-e.abc.com` (`111.222.232.98`)"},
+		{"fullLineDomain", "a-b-c-d-e.abc.com", "```a-b-c-d-e.abc.com```"},
+		{"inlineDomain", "Visit a-b-c-d-e.abc.com for info", "Visit `a-b-c-d-e.abc.com` for info"},
+		{"multipleDomains", "a-b-c-d-e.abc.com and x.y.z.com", "`a-b-c-d-e.abc.com` and `x.y.z.com`"},
+		{"noDomain", "hello world", "hello world"},
+		{"domainInBulletWithExtraText", "* see a-b-c-d-e.abc.com for info", "* see `a-b-c-d-e.abc.com` for info"},
+	}
+	for _, tc := range tests {
+		t.Run(tc.name, func(t *testing.T) {
+			got := ProtectDomains(tc.in)
+			if got != tc.out {
+				t.Errorf("input: %q\ngot:  %q\nwant: %q", tc.in, got, tc.out)
+			}
+		})
 	}
 }

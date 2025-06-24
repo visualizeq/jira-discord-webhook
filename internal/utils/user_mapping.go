@@ -3,6 +3,7 @@ package utils
 import (
 	"os"
 	"regexp"
+	"strings"
 
 	"gopkg.in/yaml.v3"
 )
@@ -52,4 +53,29 @@ func ReplaceJiraMentionsWithDiscord(text string) string {
 		}
 		return match
 	})
+}
+
+var domainPattern = regexp.MustCompile(`([a-zA-Z0-9-]+\.[a-zA-Z0-9.-]+)`)
+
+// ProtectDomains wraps domain-like patterns in triple backticks if the line is only a domain, otherwise single backticks.
+func ProtectDomains(s string) string {
+	lines := strings.Split(s, "\n")
+	for i, line := range lines {
+		trimmed := strings.TrimSpace(line)
+		if domainPattern.MatchString(trimmed) && strings.HasPrefix(trimmed, "*") {
+			// For bullet lines, wrap domain part in single backticks
+			lines[i] = domainPattern.ReplaceAllStringFunc(line, func(domain string) string {
+				return "`" + domain + "`"
+			})
+		} else if domainPattern.MatchString(trimmed) && len(trimmed) == len(domainPattern.FindString(trimmed)) {
+			// If the whole line is a domain, wrap in triple backticks
+			lines[i] = "```" + trimmed + "```"
+		} else if domainPattern.MatchString(line) {
+			// For inline domains, wrap each domain in single backticks
+			lines[i] = domainPattern.ReplaceAllStringFunc(line, func(domain string) string {
+				return "`" + domain + "`"
+			})
+		}
+	}
+	return strings.Join(lines, "\n")
 }

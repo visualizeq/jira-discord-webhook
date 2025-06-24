@@ -22,12 +22,15 @@ func TestJiraToMarkdown(t *testing.T) {
 		{"noformat", `{noformat}abc{noformat}`, "```abc```"},
 		{"panel", `{panel:title=Title}line1\nline2{panel}`,
 			"> **Title**\n> line1\n> line2"},
-		{"code block", `{code:go}fmt.Println(1){code}`,
+		{"codeBlock", `{code:go}fmt.Println(1){code}`,
 			"```go\nfmt.Println(1)\n```"},
-		{"code block no lang", `{code}fmt.Println(1){code}`,
+		{"codeBlockNoLang", `{code}fmt.Println(1){code}`,
 			"```\nfmt.Println(1)\n```"},
 		{"superscript", `^sup^`, `^sup^`},
 		{"subscript", `~sub~`, `~sub~`},
+		{"strikethroughInCodeSpan", "`a-b-c-d-e.abc.com`", "`a-b-c-d-e.abc.com`"},
+		{"strikethroughInCodeBlock", "```a-b-c-d-e.abc.com```", "```a-b-c-d-e.abc.com```"},
+		{"strikethroughOutsideCode", "a-b-c-d-e.abc.com", "a~~b~~c~~d~~e.abc.com"},
 	}
 	for _, tc := range tests {
 		t.Run(tc.name, func(t *testing.T) {

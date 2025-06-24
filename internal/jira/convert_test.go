@@ -104,7 +104,7 @@ func TestToDiscordMessageColorFromEnv(t *testing.T) {
 	}
 }
 
-func TestToDiscordMessage_EmptyFields(t *testing.T) {
+func TestToDiscordMessageEmptyFields(t *testing.T) {
 	w := Webhook{
 		Issue: Issue{Key: "PRJ-EMPTY"},
 	}
@@ -117,7 +117,7 @@ func TestToDiscordMessage_EmptyFields(t *testing.T) {
 	}
 }
 
-func TestToDiscordMessage_LongFields(t *testing.T) {
+func TestToDiscordMessageLongFields(t *testing.T) {
 	long := strings.Repeat("A", 300)
 	w := Webhook{
 		Issue: Issue{Key: long},
@@ -133,7 +133,7 @@ func TestToDiscordMessage_LongFields(t *testing.T) {
 	}
 }
 
-func TestToDiscordMessage_EmptyCommentBody(t *testing.T) {
+func TestToDiscordMessageEmptyCommentBody(t *testing.T) {
 	w := Webhook{
 		Issue:   Issue{Key: "PRJ-EMPTY-COMMENT"},
 		Comment: &Comment{Body: ""},
