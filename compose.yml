@@ -9,9 +9,9 @@ services:
       - COMMENT_COLOR=${COMMENT_COLOR-0x347433}
       - CHANGELOG_COLOR=${CHANGELOG_COLOR-0xFF6F3C}
       - COMMENT_CHANGELOG_COLOR=${COMMENT_CHANGELOG_COLOR-0x5409DA}
-      - USER_MAPPING_PATH=/config/user_mapping.toml
+      - USER_MAPPING_PATH=/config/user_mapping.yaml
     ports:
       - "8080:8080"
     volumes:
-      - ./config/user_mapping.toml:/config/user_mapping.toml:ro
+      - ./config/user_mapping.yaml:/config/user_mapping.yaml:ro
     restart: always
