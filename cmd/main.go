@@ -50,7 +50,7 @@ func main() {
 	}
 	userMappingPath := os.Getenv("USER_MAPPING_PATH")
 	if userMappingPath == "" {
-		userMappingPath = "config/user_mapping.toml"
+		userMappingPath = "config/user_mapping.yaml"
 	}
 	if err := utils.LoadUserMapping(userMappingPath); err != nil {
 		log.Fatalf("failed to load user mapping: %v", err)

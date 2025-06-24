@@ -245,11 +245,16 @@ func TestMain_LogLevelVariants(t *testing.T) {
 }
 
 func TestMain(m *testing.M) {
-	tmp := "test_user_mapping.toml"
-	toml := `[jira_to_discord]
-"Test User" = "999"
+	tmp := "test_user_mapping.yaml"
+	yaml := `jira_to_discord:
+  - accountId: "accid1"
+    displayName: "User One"
+    discordId: "111111111111111111"
+  - accountId: "accid2"
+    displayName: "User Two"
+    discordId: "222222222222222222"
 `
-	_ = os.WriteFile(tmp, []byte(toml), 0644)
+	_ = os.WriteFile(tmp, []byte(yaml), 0644)
 	os.Setenv("USER_MAPPING_PATH", tmp)
 	code := m.Run()
 	_ = os.Remove(tmp)

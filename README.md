@@ -14,7 +14,7 @@ The server formats issue updates, comments, and transitions into Discord embeds 
 - Debug logging for incoming Jira payloads and outgoing Discord payloads (set logger to debug level to see raw payloads).
 - Comprehensive unit tests for all formatting and handler logic.
 - **Jira to Discord user mention mapping:**
-  - Supports mapping Jira display names to Discord user IDs using a TOML config file (see `USER_MAPPING_PATH`).
+  - Supports mapping Jira display names to Discord user IDs using a YAML config file (see `USER_MAPPING_PATH`).
   - When a Jira user matches the mapping, Discord mentions (e.g. `<@123456789>`) are used in notifications.
 
 ## Configuration
@@ -23,7 +23,7 @@ Set the following environment variables (see `.env.example`):
 
 - `DISCORD_WEBHOOK_URL`: Your Discord webhook URL
 - `JIRA_BASE_URL`: Base URL for your Jira instance
-- `USER_MAPPING_PATH`: Path to the Jira-to-Discord user mapping TOML file (default: `config/user_mapping.toml`)
+- `USER_MAPPING_PATH`: Path to the Jira-to-Discord user mapping YAML file (default: `config/user_mapping.yaml`)
 - Other variables for port and color customization
 
 ## Docker Compose
@@ -35,19 +35,18 @@ services:
   jira-discord-webhook:
     # ...existing config...
     environment:
-      - USER_MAPPING_PATH=/config/user_mapping.toml
+      - USER_MAPPING_PATH=/config/user_mapping.yaml
     volumes:
-      - ./config/user_mapping.toml:/config/user_mapping.toml:ro
+      - ./config/user_mapping.yaml:/config/user_mapping.yaml:ro
 ```
 
-This ensures the container uses your local `config/user_mapping.toml` for user mapping.
+This ensures the container uses your local `config/user_mapping.yaml` for user mapping.
 
 ## Docker Compose Example
 
 Here is a complete example of a `compose.yml` for this project:
 
 ```yaml
-version: '3.8'
 services:
   jira-discord-webhook:
     image: ghcr.io/visualizeq/jira-discord-webhook:develop
@@ -58,15 +57,15 @@ services:
       - COMMENT_COLOR=${COMMENT_COLOR-0x347433}
       - CHANGELOG_COLOR=${CHANGELOG_COLOR-0xFF6F3C}
       - COMMENT_CHANGELOG_COLOR=${COMMENT_CHANGELOG_COLOR-0x5409DA}
-      - USER_MAPPING_PATH=/config/user_mapping.toml
+      - USER_MAPPING_PATH=/config/user_mapping.yaml
     ports:
       - "8080:8080"
     volumes:
-      - ./config/user_mapping.toml:/config/user_mapping.toml:ro
+      - ./config/user_mapping.yaml:/config/user_mapping.yaml:ro
     restart: always
 ```
 
-This configuration ensures your local `config/user_mapping.toml` is available in the container and all required environment variables are set.
+This configuration ensures your local `config/user_mapping.yaml` is available in the container and all required environment variables are set.
 
 ## Building
 
@@ -123,13 +122,13 @@ Values may be specified in decimal or hexadecimal (with `0x` or `#` prefixes).
 This repository includes a multi-architecture `Dockerfile`. Build images for multiple platforms with Docker Buildx:
 
 ```bash
-docker buildx build --platform linux/amd64,linux/arm64 -t my/jira-hook .
+docker buildx build --platform linux/amd64,linux/arm64 -t jira-discord-webhook .
 ```
 
 Run the resulting image by providing the required environment variables:
 
 ```bash
-docker run -e DISCORD_WEBHOOK_URL=... -p 8080:8080 my/jira-hook
+docker run -e DISCORD_WEBHOOK_URL=... -p 8080:8080 jira-discord-webhook
 ```
 
 ## Postman Collection
@@ -151,3 +150,14 @@ go test -json ./... | tparse -all
 ## Releases
 
 This project automatically generates release notes using [git-cliff](https://github.com/orhun/git-cliff) whenever changes are pushed to the `main` branch or a tag is created.
+
+# Example user mapping (config/user_mapping.yaml):
+```yaml
+jira_to_discord:
+  - accountId: "834295173847200064837294"
+    displayName: "Random User1"
+    discordId: "235702400604700673"
+  - accountId: "927461058372910384756120"
+    displayName: "Random User2"
+    discordId: "927461058372910384"
+```

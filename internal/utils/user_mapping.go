@@ -2,11 +2,20 @@ package utils
 
 import (
 	"os"
+	"regexp"
 
-	"github.com/pelletier/go-toml/v2"
+	"gopkg.in/yaml.v3"
 )
 
-type UserMapping map[string]string
+type JiraUserMapping struct {
+	AccountID   string `yaml:"accountId"`
+	DisplayName string `yaml:"displayName"`
+	DiscordID   string `yaml:"discordId"`
+}
+
+type UserMapping struct {
+	JiraToDiscord []JiraUserMapping `yaml:"jira_to_discord"`
+}
 
 var jiraToDiscord UserMapping
 
@@ -15,19 +24,32 @@ func LoadUserMapping(path string) error {
 	if err != nil {
 		return err
 	}
-	var raw struct {
-		JiraToDiscord map[string]string `toml:"jira_to_discord"`
-	}
-	if err := toml.Unmarshal(f, &raw); err != nil {
+	var raw UserMapping
+	if err := yaml.Unmarshal(f, &raw); err != nil {
 		return err
 	}
-	jiraToDiscord = raw.JiraToDiscord
+	jiraToDiscord = raw
 	return nil
 }
 
-func DiscordMentionForJiraUser(name string) string {
-	if id, ok := jiraToDiscord[name]; ok {
-		return "<@" + id + ">"
+func DiscordMentionForJiraUser(key string) string {
+	for _, u := range jiraToDiscord.JiraToDiscord {
+		if u.AccountID == key || u.DisplayName == key {
+			return "<@" + u.DiscordID + ">"
+		}
 	}
-	return name
+	return key
+}
+
+var accountIdPattern = regexp.MustCompile(`\[~accountid:([a-zA-Z0-9:.-]+)\]`)
+
+// ReplaceJiraMentionsWithDiscord replaces all [~accountid:...] in text with Discord mentions.
+func ReplaceJiraMentionsWithDiscord(text string) string {
+	return accountIdPattern.ReplaceAllStringFunc(text, func(match string) string {
+		groups := accountIdPattern.FindStringSubmatch(match)
+		if len(groups) == 2 {
+			return DiscordMentionForJiraUser(groups[1])
+		}
+		return match
+	})
 }

@@ -26,7 +26,7 @@
         },
         "body": {
           "mode": "raw",
-          "raw": "{\n  \"issue\": {\n    \"key\": \"PRJ-1\",\n    \"fields\": {\n      \"summary\": \"Test issue with https://summary.example.com and https://another-summary.example.com\",\n      \"description\": \"See https://jira.example.com/browse/PRJ-1 and https://docs.example.com for details. More at https://desc.example.com\",\n      \"priority\": {\"name\": \"High\"},\n      \"assignee\": {\"displayName\": \"Bob\"},\n      \"issuetype\": {\"name\": \"Task\"},\n      \"status\": {\"name\": \"Open\"}\n    }\n  }\n}\n",
+          "raw": "{\n  \"issue\": {\n    \"key\": \"PRJ-1\",\n    \"fields\": {\n      \"summary\": \"Test issue with mention\",\n      \"description\": \"This is for [~accountid:834295173847200064837294] and Random User2\",\n      \"priority\": {\"name\": \"High\"},\n      \"assignee\": {\"displayName\": \"Random User2\"},\n      \"issuetype\": {\"name\": \"Task\"},\n      \"status\": {\"name\": \"Open\"}\n    }\n  }\n}\n",
           "options": {
             "raw": {
               "language": "json"
@@ -68,7 +68,7 @@
         },
         "body": {
           "mode": "raw",
-          "raw": "{\n  \"issue\": {\n    \"key\": \"PRJ-2\",\n    \"fields\": {\n      \"summary\": \"Commented issue with https://summary.example.com\",\n      \"description\": \"See https://jira.example.com/browse/PRJ-2 and https://docs.example.com\",\n      \"priority\": {\"name\": \"High\"},\n      \"assignee\": {\"displayName\": \"Bob\"},\n      \"issuetype\": {\"name\": \"Task\"},\n      \"status\": {\"name\": \"Open\"}\n    }\n  },\n  \"comment\": {\n    \"body\": \"looks good. See https://comment.example.com and https://another-comment.example.com\",\n    \"author\": {\"displayName\": \"Alice\"}\n  }\n}\n",
+          "raw": "{\n  \"issue\": {\n    \"key\": \"PRJ-2\",\n    \"fields\": {\n      \"summary\": \"Commented issue with mention\",\n      \"description\": \"See https://jira.example.com/browse/PRJ-2\",\n      \"priority\": {\"name\": \"High\"},\n      \"assignee\": {\"displayName\": \"Random User1\"},\n      \"issuetype\": {\"name\": \"Task\"},\n      \"status\": {\"name\": \"Open\"}\n    }\n  },\n  \"comment\": {\n    \"body\": \"Please review this [~accountid:927461058372910384756120] and Random User1 ASAP.\",\n    \"author\": {\"displayName\": \"Random User2\"}\n  }\n}\n",
           "options": {
             "raw": {
               "language": "json"
@@ -153,6 +153,90 @@
         "body": {
           "mode": "raw",
           "raw": "{\n  \"issue\": {\n    \"key\": \"PRJ-4\",\n    \"fields\": {\n      \"summary\": \"Comment and Change issue with https://summary.example.com\",\n      \"description\": \"See https://jira.example.com/browse/PRJ-4 and https://docs.example.com\",\n      \"priority\": {\"name\": \"High\"},\n      \"assignee\": {\"displayName\": \"Bob\"},\n      \"issuetype\": {\"name\": \"Task\"},\n      \"status\": {\"name\": \"Closed\"}\n    }\n  },\n  \"comment\": {\n    \"body\": \"needs work. See https://comment.example.com and https://another-comment.example.com\",\n    \"author\": {\"displayName\": \"Alice\"}\n  },\n  \"changelog\": {\n    \"items\": [\n      {\"field\": \"status\", \"fromString\": \"Open\", \"toString\": \"Closed\"}\n    ]\n  }\n}\n",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "AccountId Mention Event",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/webhook",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "webhook"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"issue\": {\n    \"key\": \"PRJ-5\",\n    \"fields\": {\n      \"summary\": \"AccountId mention test\",\n      \"description\": \"Testing [~accountid:712020:dbb8c67c-8e1b-4c45-abb6-6391637b585b] mention in description\",\n      \"priority\": {\"name\": \"High\"},\n      \"assignee\": {\"accountId\": \"712020:dbb8c67c-8e1b-4c45-abb6-6391637b585b\", \"displayName\": \"Rachata Chatsangcharoen\"},\n      \"issuetype\": {\"name\": \"Task\"},\n      \"status\": {\"name\": \"Open\"}\n    }\n  },\n  \"comment\": {\n    \"body\": \"Please review this [~accountid:712020:dbb8c67c-8e1b-4c45-abb6-6391637b585b] ASAP.\",\n    \"author\": {\"accountId\": \"5f7e993f287870006a47d943\", \"displayName\": \"Jakkapong Yuangtong\"}\n  }\n}\n",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "User Mapping Mention Test",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/webhook",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "webhook"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"issue\": {\n    \"key\": \"PRJ-MAP\",\n    \"fields\": {\n      \"summary\": \"User mapping test\",\n      \"description\": \"This is for [~accountid:712020:dbb8c67c-8e1b-4c45-abb6-6391637b585b] and Pisud Waprakhon\",\n      \"priority\": {\"name\": \"High\"},\n      \"assignee\": {\"displayName\": \"Pisud Waprakhon\"},\n      \"issuetype\": {\"name\": \"Task\"},\n      \"status\": {\"name\": \"Open\"}\n    }\n  },\n  \"comment\": {\n    \"body\": \"Please review this [~accountid:5ebde4017dab3a0bb475f4c3] and Rachata Chatsangcharoen ASAP.\",\n    \"author\": {\"displayName\": \"Pisud Waprakhon\"}\n  }\n}\n",
           "options": {
             "raw": {
               "language": "json"
