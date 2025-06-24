@@ -1,0 +1,9 @@
+# Jira to Discord user mapping
+# Each entry maps a Jira user (by accountId and displayName) to a Discord user ID
+jira_to_discord:
+  - accountId: "834295173847200064837294"
+    displayName: "Random User1"
+    discordId: 235702400604700673
+  - accountId: "927461058372910384756120"
+    displayName: "Random User2"
+    discordId: 927461058372910384

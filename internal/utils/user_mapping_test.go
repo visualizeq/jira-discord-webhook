@@ -5,34 +5,72 @@ import (
 	"testing"
 )
 
-func TestLoadUserMappingAndMention(t *testing.T) {
-	// Prepare a temp TOML file
-	toml := `[jira_to_discord]
-"Alice" = "123"
-"Bob" = "456"
+func TestLoadUserMappingAndDiscordMention(t *testing.T) {
+	// Prepare a temporary YAML file
+	yamlContent := `jira_to_discord:
+  - accountId: "accid1"
+    displayName: "User One"
+    discordId: "111111111111111111"
+  - accountId: "accid2"
+    displayName: "User Two"
+    discordId: "222222222222222222"
 `
-	tmp := "test_user_mapping.toml"
-	if err := os.WriteFile(tmp, []byte(toml), 0644); err != nil {
-		t.Fatalf("failed to write temp toml: %v", err)
+	tmpFile, err := os.CreateTemp("", "user_mapping_test_*.yaml")
+	if err != nil {
+		t.Fatalf("failed to create temp file: %v", err)
 	}
-	defer os.Remove(tmp)
+	defer os.Remove(tmpFile.Name())
+	if _, err := tmpFile.Write([]byte(yamlContent)); err != nil {
+		t.Fatalf("failed to write temp yaml: %v", err)
+	}
+	tmpFile.Close()
 
-	if err := LoadUserMapping(tmp); err != nil {
+	// Load mapping
+	if err := LoadUserMapping(tmpFile.Name()); err != nil {
 		t.Fatalf("LoadUserMapping failed: %v", err)
 	}
 
-	tests := []struct {
-		jiraName string
-		expect   string
-	}{
-		{"Alice", "<@123>"},
-		{"Bob", "<@456>"},
-		{"Unknown", "Unknown"},
+	// Test by accountId
+	if got := DiscordMentionForJiraUser("accid1"); got != "<@111111111111111111>" {
+		t.Errorf("expected <@111111111111111111>, got %s", got)
 	}
-	for _, tc := range tests {
-		got := DiscordMentionForJiraUser(tc.jiraName)
-		if got != tc.expect {
-			t.Errorf("mention for %q: got %q, want %q", tc.jiraName, got, tc.expect)
-		}
+	// Test by displayName
+	if got := DiscordMentionForJiraUser("User Two"); got != "<@222222222222222222>" {
+		t.Errorf("expected <@222222222222222222>, got %s", got)
+	}
+	// Test fallback
+	if got := DiscordMentionForJiraUser("unknown"); got != "unknown" {
+		t.Errorf("expected unknown, got %s", got)
+	}
+}
+
+func TestReplaceJiraMentionsWithDiscord(t *testing.T) {
+	// Setup a fake mapping
+	jiraToDiscord = UserMapping{
+		JiraToDiscord: []JiraUserMapping{
+			{AccountID: "accid1", DisplayName: "User One", DiscordID: "111111111111111111"},
+			{AccountID: "accid2", DisplayName: "User Two", DiscordID: "222222222222222222"},
+		},
+	}
+
+	// Test single accountId mention
+	in := "Hello [~accountid:accid1]!"
+	want := "Hello <@111111111111111111>!"
+	if got := ReplaceJiraMentionsWithDiscord(in); got != want {
+		t.Errorf("got %q, want %q", got, want)
+	}
+
+	// Test multiple accountId mentions
+	in = "[~accountid:accid1] and [~accountid:accid2] are here."
+	want = "<@111111111111111111> and <@222222222222222222> are here."
+	if got := ReplaceJiraMentionsWithDiscord(in); got != want {
+		t.Errorf("got %q, want %q", got, want)
+	}
+
+	// Test unknown accountId
+	in = "Hi [~accountid:unknown]!"
+	want = "Hi unknown!" // The current implementation falls back to the key if not found
+	if got := ReplaceJiraMentionsWithDiscord(in); got != want {
+		t.Errorf("got %q, want %q", got, want)
 	}
 }

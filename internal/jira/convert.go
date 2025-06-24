@@ -69,7 +69,7 @@ func ToDiscordMessage(w Webhook, baseURL string) discord.WebhookMessage {
 	if w.Comment != nil {
 		desc = ""
 	} else {
-		desc = truncateString(utils.DiscordMentionForJiraUser(JiraToMarkdown(w.Issue.Fields.Description)), descMax)
+		desc = truncateString(JiraToMarkdown(utils.ReplaceJiraMentionsWithDiscord(w.Issue.Fields.Description)), descMax)
 	}
 
 	embed := discord.Embed{
@@ -98,9 +98,10 @@ func ToDiscordMessage(w Webhook, baseURL string) discord.WebhookMessage {
 	}
 
 	if w.Comment != nil {
+		commentBody := JiraToMarkdown(utils.ReplaceJiraMentionsWithDiscord(w.Comment.Body))
 		embed.Fields = append(embed.Fields, discord.Field{
 			Name:   truncateString("Comment", fieldNameMax),
-			Value:  truncateString(JiraToMarkdown(w.Comment.Body), fieldValueMax),
+			Value:  truncateString(commentBody, fieldValueMax),
 			Inline: false,
 		})
 		embed.Fields = append(embed.Fields, discord.Field{
