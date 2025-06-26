@@ -30,7 +30,8 @@ func TestJiraToMarkdown(t *testing.T) {
 		{"subscript", `~sub~`, `~sub~`},
 		{"strikethroughInCodeSpan", "`a-b-c-d-e.abc.com`", "`a-b-c-d-e.abc.com`"},
 		{"strikethroughInCodeBlock", "```a-b-c-d-e.abc.com```", "```a-b-c-d-e.abc.com```"},
-		{"strikethroughOutsideCode", "a-b-c-d-e.abc.com", "a~~b~~c~~d~~e.abc.com"},
+		{"strikethroughOutsideCode", "a-b-c-d-e.abc.com", "a-b-c-d-e.abc.com"},
+		{"strikethroughDate", "2025-06-03", "2025-06-03"},
 	}
 	for _, tc := range tests {
 		t.Run(tc.name, func(t *testing.T) {
