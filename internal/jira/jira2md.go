@@ -94,7 +94,8 @@ func JiraToMarkdown(s string) string {
 		// Monospace: {{text}} -> `text`
 		seg.text = regexp.MustCompile(`\{\{(.*?)\}\}`).ReplaceAllString(seg.text, "`$1`")
 		// Strikethrough: -text- -> ~~text~~ (only outside code)
-		seg.text = regexp.MustCompile(`-(.*?)-`).ReplaceAllString(seg.text, `~~$1~~`)
+		// Only match -text- that is surrounded by word boundaries and not part of a hostname or URL
+		seg.text = regexp.MustCompile(`\B-([a-zA-Z0-9][^\s-]*[a-zA-Z0-9])-\B`).ReplaceAllString(seg.text, `~~$1~~`)
 		// Blockquote: bq. text -> > text
 		seg.text = regexp.MustCompile(`(?m)^bq\.\s+`).ReplaceAllString(seg.text, "> ")
 		// Remove color markup: {color:red}text{color} -> text
