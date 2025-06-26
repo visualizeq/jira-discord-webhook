@@ -11,7 +11,8 @@ ARG TARGETVARIANT
 RUN CGO_ENABLED=0 GOOS=$TARGETOS GOARCH=$TARGETARCH GOARM=${TARGETVARIANT#v} go build -o /out/app ./cmd
 
 FROM alpine:3.22
-WORKDIR /
-COPY --from=builder /out/app /app
+RUN mkdir -p /app
+WORKDIR /app
+COPY --from=builder /out/app /app/service
 EXPOSE 8080
-ENTRYPOINT ["/app"]
+ENTRYPOINT ["/app/service"]

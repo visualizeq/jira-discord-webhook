@@ -9,7 +9,10 @@ The server formats issue updates, comments, and transitions into Discord embeds 
   - Converts Jira wiki-style links (e.g. `[text|http://example.com]`) to Markdown links for Discord.
   - Supports bold (`+bold+`), italics (`*italic*`), underline (`_underline_`), strikethrough (`-strike-`), monospace/code (`{{code}}`), blockquote (`bq. quote`), and removes color markup.
   - Handles advanced blocks: `{noformat}...{noformat}` (as code), `{panel:title=...}...{panel}` (as Discord-styled block), `{code[:lang]}...{code}` (as fenced code block with language).
-  - All formatting is tested for edge cases and multi-line content.
+  - **Strikethrough formatting is robust:**
+    - Hostnames, dates, and similar patterns (e.g. `2025-06-03`, `a-b-c-d-e.abc.com`) are not incorrectly formatted with strikethrough.
+    - Only true Jira strikethroughs (e.g. `-strike-`) are converted to Discord's `~~strike~~`.
+    - Extensive edge case tests are included for all formatting.
 - Handles empty comment bodies gracefully (empty comments will result in empty Discord descriptions).
 - Debug logging for incoming Jira payloads and outgoing Discord payloads (set logger to debug level to see raw payloads).
 - Comprehensive unit tests for all formatting and handler logic.
