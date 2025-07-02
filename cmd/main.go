@@ -31,9 +31,14 @@ func main() {
 		level = zap.NewAtomicLevelAt(zap.InfoLevel)
 	}
 
-	cfg := zap.NewProductionConfig()
-	cfg.Level = level
-	zapLogger, _ := cfg.Build()
+	logFile := os.Getenv("LOG_FILE")
+	if logFile == "" {
+		logFile = "logs/app.log"
+	}
+	zapLogger, err := utils.NewZapLoggerWithRotate(logFile, level)
+	if err != nil {
+		log.Fatalf("failed to create zap logger: %v", err)
+	}
 	defer zapLogger.Sync()
 	zap.ReplaceGlobals(zapLogger)
 
