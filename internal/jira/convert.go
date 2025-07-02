@@ -132,11 +132,13 @@ func ToDiscordMessage(w Webhook, baseURL string) discord.WebhookMessage {
 			if strings.ToLower(item.Field) == "status" {
 				name = "Status"
 			}
+			from := JiraToMarkdown(item.FromString)
+			to := JiraToMarkdown(item.ToString)
 			var change string
 			if item.FromString == "" {
-				change = fmt.Sprintf("%s set to %s", name, utils.DiscordMentionForJiraUser(item.ToString))
+				change = fmt.Sprintf("%s set to %s", name, utils.DiscordMentionForJiraUser(to))
 			} else {
-				change = fmt.Sprintf("%s: %s → %s", name, utils.DiscordMentionForJiraUser(item.FromString), utils.DiscordMentionForJiraUser(item.ToString))
+				change = fmt.Sprintf("%s: %s → %s", name, utils.DiscordMentionForJiraUser(from), utils.DiscordMentionForJiraUser(to))
 			}
 			changes = append(changes, truncateString(change, fieldValueMax))
 		}
