@@ -8,7 +8,7 @@ import (
 	"testing"
 )
 
-func TestSendWebhookMissingURL(t *testing.T) {
+func TestSendWebhookMissingUrl(t *testing.T) {
 	os.Unsetenv("DISCORD_WEBHOOK_URL")
 	err := SendWebhook(WebhookMessage{Username: "bot"})
 	if err == nil {
@@ -16,7 +16,7 @@ func TestSendWebhookMissingURL(t *testing.T) {
 	}
 }
 
-func TestSendWebhookHTTPError(t *testing.T) {
+func TestSendWebhookHttpError(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "bad", http.StatusBadRequest)
 	}))
@@ -48,7 +48,7 @@ func TestSendWebhookSuccess(t *testing.T) {
 	}
 }
 
-func TestSendWebhook_EmptyPayload(t *testing.T) {
+func TestSendWebhookEmptyPayload(t *testing.T) {
 	// Valid URL, but empty payload
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.ContentLength == 0 {
@@ -64,7 +64,7 @@ func TestSendWebhook_EmptyPayload(t *testing.T) {
 	}
 }
 
-func TestSendWebhook_LargePayload(t *testing.T) {
+func TestSendWebhookLargePayload(t *testing.T) {
 	large := make([]byte, 2048)
 	for i := range large {
 		large[i] = 'A'
@@ -82,7 +82,7 @@ func TestSendWebhook_LargePayload(t *testing.T) {
 	}
 }
 
-func TestSendWebhook_UnreachableURL(t *testing.T) {
+func TestSendWebhookUnreachableUrl(t *testing.T) {
 	os.Setenv("DISCORD_WEBHOOK_URL", "http://127.0.0.1:0") // Unreachable port
 	msg := WebhookMessage{Username: "bot"}
 	if err := SendWebhook(msg); err == nil {

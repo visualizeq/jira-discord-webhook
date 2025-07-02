@@ -20,7 +20,7 @@ func setupApp() *fiber.App {
 	return app
 }
 
-func TestWebhookHandler_Success(t *testing.T) {
+func TestWebhookHandlerSuccess(t *testing.T) {
 	app := setupApp()
 	os.Setenv("JIRA_BASE_URL", "https://jira.example.com/browse")
 	defer os.Unsetenv("JIRA_BASE_URL")
@@ -55,7 +55,7 @@ func TestWebhookHandler_Success(t *testing.T) {
 	require.True(t, called, "SendFunc should be called")
 }
 
-func TestWebhookHandler_MissingBaseURL(t *testing.T) {
+func TestWebhookHandlerMissingBaseURL(t *testing.T) {
 	app := setupApp()
 	os.Unsetenv("JIRA_BASE_URL")
 	original := discord.SendFunc
@@ -83,7 +83,7 @@ func TestWebhookHandler_MissingBaseURL(t *testing.T) {
 	require.True(t, called, "SendFunc should be called")
 }
 
-func TestWebhookHandler_CommentAndChangelog(t *testing.T) {
+func TestWebhookHandlerCommentAndChangelog(t *testing.T) {
 	app := setupApp()
 	original := discord.SendFunc
 	defer func() { discord.SendFunc = original }()
@@ -124,7 +124,7 @@ func TestWebhookHandler_CommentAndChangelog(t *testing.T) {
 	require.True(t, hasChange, "expected changelog field")
 }
 
-func TestWebhookHandler_MinimalPayload(t *testing.T) {
+func TestWebhookHandlerMinimalPayload(t *testing.T) {
 	app := setupApp()
 	original := discord.SendFunc
 	defer func() { discord.SendFunc = original }()
@@ -143,7 +143,7 @@ func TestWebhookHandler_MinimalPayload(t *testing.T) {
 	require.True(t, called, "SendFunc should be called")
 }
 
-func TestWebhookHandler_ExtraFields(t *testing.T) {
+func TestWebhookHandlerExtraFields(t *testing.T) {
 	app := setupApp()
 	original := discord.SendFunc
 	defer func() { discord.SendFunc = original }()
@@ -165,7 +165,7 @@ func TestWebhookHandler_ExtraFields(t *testing.T) {
 	require.True(t, called, "SendFunc should be called")
 }
 
-func TestWebhookHandler_NilCommentChangelog(t *testing.T) {
+func TestWebhookHandlerNilCommentChangelog(t *testing.T) {
 	app := setupApp()
 	original := discord.SendFunc
 	defer func() { discord.SendFunc = original }()
@@ -188,7 +188,7 @@ func TestWebhookHandler_NilCommentChangelog(t *testing.T) {
 	require.True(t, called, "SendFunc should be called")
 }
 
-func TestWebhookHandler_DiscordCustomError(t *testing.T) {
+func TestWebhookHandlerDiscordCustomError(t *testing.T) {
 	app := setupApp()
 	original := discord.SendFunc
 	defer func() { discord.SendFunc = original }()
@@ -204,7 +204,7 @@ func TestWebhookHandler_DiscordCustomError(t *testing.T) {
 	require.Equal(t, fiber.StatusInternalServerError, resp.StatusCode)
 }
 
-func TestWebhookHandler_LargeValidPayload(t *testing.T) {
+func TestWebhookHandlerLargeValidPayload(t *testing.T) {
 	app := setupApp()
 	original := discord.SendFunc
 	defer func() { discord.SendFunc = original }()
@@ -224,7 +224,7 @@ func TestWebhookHandler_LargeValidPayload(t *testing.T) {
 	require.True(t, called, "SendFunc should be called")
 }
 
-func TestWebhookHandler_EmptyIssueKey(t *testing.T) {
+func TestWebhookHandlerEmptyIssueKey(t *testing.T) {
 	app := setupApp()
 	original := discord.SendFunc
 	defer func() { discord.SendFunc = original }()
@@ -243,7 +243,7 @@ func TestWebhookHandler_EmptyIssueKey(t *testing.T) {
 	require.True(t, called, "SendFunc should be called")
 }
 
-func TestWebhookHandler_EmptyFields(t *testing.T) {
+func TestWebhookHandlerEmptyFields(t *testing.T) {
 	app := setupApp()
 	original := discord.SendFunc
 	defer func() { discord.SendFunc = original }()
@@ -262,7 +262,7 @@ func TestWebhookHandler_EmptyFields(t *testing.T) {
 	require.True(t, called, "SendFunc should be called")
 }
 
-func TestWebhookHandler_EmptyCommentBody(t *testing.T) {
+func TestWebhookHandlerEmptyCommentBody(t *testing.T) {
 	app := setupApp()
 	original := discord.SendFunc
 	defer func() { discord.SendFunc = original }()
@@ -284,7 +284,7 @@ func TestWebhookHandler_EmptyCommentBody(t *testing.T) {
 	require.True(t, called, "SendFunc should be called")
 }
 
-func TestWebhookHandler_EmptyChangelogItems(t *testing.T) {
+func TestWebhookHandlerEmptyChangelogItems(t *testing.T) {
 	app := setupApp()
 	original := discord.SendFunc
 	defer func() { discord.SendFunc = original }()
@@ -306,7 +306,7 @@ func TestWebhookHandler_EmptyChangelogItems(t *testing.T) {
 	require.True(t, called, "SendFunc should be called")
 }
 
-func TestWebhookHandler_CommentNoAuthor(t *testing.T) {
+func TestWebhookHandlerCommentNoAuthor(t *testing.T) {
 	app := setupApp()
 	original := discord.SendFunc
 	defer func() { discord.SendFunc = original }()
@@ -328,7 +328,7 @@ func TestWebhookHandler_CommentNoAuthor(t *testing.T) {
 	require.True(t, called, "SendFunc should be called")
 }
 
-func TestWebhookHandler_BadRequestPayload(t *testing.T) {
+func TestWebhookHandlerBadRequestPayload(t *testing.T) {
 	app := setupApp()
 	// Invalid JSON
 	req := httptest.NewRequest("POST", "/webhook", bytes.NewBufferString("{"))
@@ -338,7 +338,7 @@ func TestWebhookHandler_BadRequestPayload(t *testing.T) {
 	require.Equal(t, fiber.StatusBadRequest, resp.StatusCode)
 }
 
-func TestWebhookHandler_DiscordSendError(t *testing.T) {
+func TestWebhookHandlerDiscordSendError(t *testing.T) {
 	app := setupApp()
 	original := discord.SendFunc
 	defer func() { discord.SendFunc = original }()
@@ -354,7 +354,7 @@ func TestWebhookHandler_DiscordSendError(t *testing.T) {
 	require.Equal(t, fiber.StatusInternalServerError, resp.StatusCode)
 }
 
-func TestWebhookHandler_EmptyBody(t *testing.T) {
+func TestWebhookHandlerEmptyBody(t *testing.T) {
 	app := setupApp()
 	req := httptest.NewRequest("POST", "/webhook", nil)
 	req.Header.Set("Content-Type", "application/json")
@@ -363,7 +363,7 @@ func TestWebhookHandler_EmptyBody(t *testing.T) {
 	require.Equal(t, fiber.StatusBadRequest, resp.StatusCode)
 }
 
-func TestWebhookHandler_UnsupportedMethod(t *testing.T) {
+func TestWebhookHandlerUnsupportedMethod(t *testing.T) {
 	app := setupApp()
 	// Fiber returns 405 Method Not Allowed for unsupported methods on a registered route
 	resp, err := app.Test(httptest.NewRequest("GET", "/webhook", nil))
@@ -371,7 +371,7 @@ func TestWebhookHandler_UnsupportedMethod(t *testing.T) {
 	require.Equal(t, fiber.StatusMethodNotAllowed, resp.StatusCode)
 }
 
-func TestWebhookHandler_UnregisteredRoute(t *testing.T) {
+func TestWebhookHandlerUnregisteredRoute(t *testing.T) {
 	app := setupApp()
 	resp, err := app.Test(httptest.NewRequest("POST", "/notfound", nil))
 	require.NoError(t, err)

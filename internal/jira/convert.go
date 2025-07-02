@@ -69,7 +69,11 @@ func ToDiscordMessage(w Webhook, baseURL string) discord.WebhookMessage {
 	if w.Comment != nil {
 		desc = ""
 	} else {
-		desc = truncateString(JiraToMarkdown(utils.ReplaceJiraMentionsWithDiscord(w.Issue.Fields.Description)), descMax)
+		desc = w.Issue.Fields.Description
+		desc = utils.ProtectDomains(desc)
+		desc = utils.ReplaceJiraMentionsWithDiscord(desc)
+		desc = JiraToMarkdown(desc)
+		desc = truncateString(desc, descMax)
 	}
 
 	embed := discord.Embed{
@@ -98,10 +102,17 @@ func ToDiscordMessage(w Webhook, baseURL string) discord.WebhookMessage {
 	}
 
 	if w.Comment != nil {
-		commentBody := JiraToMarkdown(utils.ReplaceJiraMentionsWithDiscord(w.Comment.Body))
+		commentBody := w.Comment.Body
+		commentBody = utils.ProtectDomains(commentBody)
+		fmt.Println("[DEBUG] After ProtectDomains:", commentBody)
+		commentBody = utils.ReplaceJiraMentionsWithDiscord(commentBody)
+		fmt.Println("[DEBUG] After ReplaceJiraMentionsWithDiscord:", commentBody)
+		commentBody = JiraToMarkdown(commentBody)
+		fmt.Println("[DEBUG] After JiraToMarkdown:", commentBody)
+		commentBody = truncateString(commentBody, fieldValueMax)
 		embed.Fields = append(embed.Fields, discord.Field{
 			Name:   truncateString("Comment", fieldNameMax),
-			Value:  truncateString(commentBody, fieldValueMax),
+			Value:  commentBody,
 			Inline: false,
 		})
 		embed.Fields = append(embed.Fields, discord.Field{
@@ -121,11 +132,13 @@ func ToDiscordMessage(w Webhook, baseURL string) discord.WebhookMessage {
 			if strings.ToLower(item.Field) == "status" {
 				name = "Status"
 			}
+			from := JiraToMarkdown(item.FromString)
+			to := JiraToMarkdown(item.ToString)
 			var change string
 			if item.FromString == "" {
-				change = fmt.Sprintf("%s set to %s", name, utils.DiscordMentionForJiraUser(item.ToString))
+				change = fmt.Sprintf("%s set to %s", name, utils.DiscordMentionForJiraUser(to))
 			} else {
-				change = fmt.Sprintf("%s: %s → %s", name, utils.DiscordMentionForJiraUser(item.FromString), utils.DiscordMentionForJiraUser(item.ToString))
+				change = fmt.Sprintf("%s: %s → %s", name, utils.DiscordMentionForJiraUser(from), utils.DiscordMentionForJiraUser(to))
 			}
 			changes = append(changes, truncateString(change, fieldValueMax))
 		}

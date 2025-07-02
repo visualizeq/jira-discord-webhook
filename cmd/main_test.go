@@ -117,7 +117,7 @@ func TestWebhookHandlerSuccess(t *testing.T) {
 	}
 }
 
-func TestWebhookHandlerBadJSON(t *testing.T) {
+func TestWebhookHandlerBadJson(t *testing.T) {
 	app := setupTestApp()
 	req := httptest.NewRequest("POST", "/webhook", bytes.NewBufferString("{"))
 	req.Header.Set("Content-Type", "application/json")
@@ -212,7 +212,7 @@ func TestWebhookHandlerChangelog(t *testing.T) {
 	}
 }
 
-func TestMain_EnvVars(t *testing.T) {
+func TestMainEnvVars(t *testing.T) {
 	os.Setenv("LOG_LEVEL", "debug")
 	os.Setenv("PORT", "12345")
 	os.Setenv("JIRA_BASE_URL", "https://jira.example.com/browse")
@@ -221,7 +221,7 @@ func TestMain_EnvVars(t *testing.T) {
 	// To avoid actually starting the server, run main in a goroutine and kill after a short time (not shown here).
 }
 
-func TestMain_LogLevelVariants(t *testing.T) {
+func TestMainLogLevelVariants(t *testing.T) {
 	levels := []string{"debug", "info", "warn", "error", "", "invalid"}
 	for _, lvl := range levels {
 		t.Run(lvl, func(t *testing.T) {
