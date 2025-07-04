@@ -10,8 +10,8 @@ import (
 // Example: [text|http://example.com] => [text](http://example.com)
 func JiraToMarkdown(s string) string {
 	// Remove all table lines (headers and rows)
-	tableHeaderRE := regexp.MustCompile(`(?m)^\|\|.*\|\|\s*$`)
-	tableRowRE := regexp.MustCompile(`(?m)^\|[^|].*\|\s*$`)
+	// tableHeaderRE := regexp.MustCompile(`(?m)^\|\|.*\|\|\s*$`)
+	// tableRowRE := regexp.MustCompile(`(?m)^\|[^|].*\|\s*$`)
 
 	// Remove Jira links inside table lines (including markdown links)
 	jiraLinkInTableRE := regexp.MustCompile(`\[(.+?)\|([^\]]+)\]`)
@@ -23,8 +23,8 @@ func JiraToMarkdown(s string) string {
 		return line
 	})
 
-	s = tableHeaderRE.ReplaceAllString(s, "")
-	s = tableRowRE.ReplaceAllString(s, "")
+	// s = tableHeaderRE.ReplaceAllString(s, "")
+	// s = tableRowRE.ReplaceAllString(s, "")
 	// Convert {code} and {noformat} blocks to fenced code blocks first so
 	// their contents are not processed by other transformations.
 	codeBlockRE := regexp.MustCompile(`(?s)\{code(?::([a-zA-Z0-9_+-]+))?\}(.*?)\{code\}`)

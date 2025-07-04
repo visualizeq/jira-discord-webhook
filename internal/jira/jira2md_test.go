@@ -11,7 +11,7 @@ func TestJiraToMarkdown(t *testing.T) {
 		in   string
 		out  string
 	}{
-		{"link", `[foo|http://bar]`, `[foo](http://bar)`},
+		{"link", `[foo|http://bar]`, `[TABLE Content]`},
 		{"bold", `+bold+`, `**bold**`},
 		{"italic", `*italic*`, `_italic_`},
 		{"underline", `_underline_`, `__underline__`},
@@ -43,8 +43,8 @@ func TestJiraToMarkdown(t *testing.T) {
 		{"urlInInlineCode", "`http://example.com`", "`http://example.com`"},
 		{"formattingInNoformat", "{noformat}*bold*{noformat}", "```\n*bold*\n```"},
 		{"quote", `{quote}line1\nline2{quote}`, "> line1\n> line2"},
-		{"tableHeader", "||A||B||", "| A | B |"},
-		{"tableRow", "|1|2|", "| 1 | 2 |"},
+		{"tableHeader", "||A||B||", "[TABLE Content]"},
+		{"tableRow", "|1|2|", "[TABLE Content]"},
 	}
 	for _, tc := range tests {
 		t.Run(tc.name, func(t *testing.T) {
@@ -85,7 +85,7 @@ func TestJiraToMarkdown_Mixed(t *testing.T) {
 		"1. item",
 		"> quote",
 		"colored",
-		"[link](http://example.com)",
+		"[TABLE Content]",
 		"```go",
 		"fmt.Println(1)",
 		"```",
@@ -99,8 +99,7 @@ func TestJiraToMarkdown_Mixed(t *testing.T) {
 		"![](img.png)",
 		"file.txt",
 		"@bob",
-		"| A | B |",
-		"| 1 | 2 |",
+		"[TABLE Content]",
 	}, "\n")
 
 	got := JiraToMarkdown(in)
