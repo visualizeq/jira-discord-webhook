@@ -9,6 +9,22 @@ import (
 // JiraToMarkdown converts Jira wiki markup to Markdown/Discord formatting.
 // Example: [text|http://example.com] => [text](http://example.com)
 func JiraToMarkdown(s string) string {
+	// Remove all table lines (headers and rows)
+	tableHeaderRE := regexp.MustCompile(`(?m)^\|\|.*\|\|\s*$`)
+	tableRowRE := regexp.MustCompile(`(?m)^\|[^|].*\|\s*$`)
+
+	// Remove Jira links inside table lines (including markdown links)
+	jiraLinkInTableRE := regexp.MustCompile(`\[(.+?)\|([^\]]+)\]`)
+	markdownLinkInTableRE := regexp.MustCompile(`\[([^\]]+)\]\(([^\)]+)\)`)
+	tableLineRE := regexp.MustCompile(`(?m)^(\|\|.*\|\|\s*$|\|[^|].*\|\s*$)`)
+	s = tableLineRE.ReplaceAllStringFunc(s, func(line string) string {
+		line = jiraLinkInTableRE.ReplaceAllString(line, "$1")
+		line = markdownLinkInTableRE.ReplaceAllString(line, "$1")
+		return line
+	})
+
+	s = tableHeaderRE.ReplaceAllString(s, "")
+	s = tableRowRE.ReplaceAllString(s, "")
 	// Convert {code} and {noformat} blocks to fenced code blocks first so
 	// their contents are not processed by other transformations.
 	codeBlockRE := regexp.MustCompile(`(?s)\{code(?::([a-zA-Z0-9_+-]+))?\}(.*?)\{code\}`)
@@ -183,24 +199,7 @@ func JiraToMarkdown(s string) string {
 			}
 			return m
 		})
-		// Table header ||a||b|| -> | a | b |
-		seg.text = regexp.MustCompile(`(?m)^\|\|(.+?)\|\|$`).ReplaceAllStringFunc(seg.text, func(m string) string {
-			trimmed := strings.Trim(m, "|")
-			cells := strings.Split(trimmed, "||")
-			for i, c := range cells {
-				cells[i] = strings.TrimSpace(c)
-			}
-			return "| " + strings.Join(cells, " | ") + " |"
-		})
-		// Table row |a|b| -> | a | b |
-		seg.text = regexp.MustCompile(`(?m)^\|([^|].*?)\|$`).ReplaceAllStringFunc(seg.text, func(m string) string {
-			trimmed := strings.Trim(m, "|")
-			cells := strings.Split(trimmed, "|")
-			for i, c := range cells {
-				cells[i] = strings.TrimSpace(c)
-			}
-			return "| " + strings.Join(cells, " | ") + " |"
-		})
+		// Removed table header and row reconstruction
 		// Attachment: [^file.ext] -> file.txt
 		seg.text = regexp.MustCompile(`\[\^([^\]]+)\]`).ReplaceAllString(seg.text, "$1")
 		// Image: !img.png! -> ![](img.png)
@@ -282,5 +281,32 @@ func JiraToMarkdown(s string) string {
 	for _, seg := range segments {
 		out.WriteString(seg.text)
 	}
-	return out.String()
+	s = out.String()
+	// Replace any block of consecutive table-like lines with a single [TABLE Content]
+	tableLikeLineRE := regexp.MustCompile(`^[ \t]*\|.*$|^.*\|[ \t]*$|^[ \t]*\[.*\]\(.*\)[ \t]*\|?[ \t]*$`)
+	lines := strings.Split(s, "\n")
+	var result []string
+	inTable := false
+	for i := 0; i < len(lines); {
+		if tableLikeLineRE.MatchString(lines[i]) {
+			// Start of a table block
+			if !inTable {
+				result = append(result, "[TABLE Content]")
+				inTable = true
+			}
+			// Skip all consecutive table-like lines
+			for i < len(lines) && tableLikeLineRE.MatchString(lines[i]) {
+				i++
+			}
+			continue
+		}
+		inTable = false
+		result = append(result, lines[i])
+		i++
+	}
+	s = strings.Join(result, "\n")
+	// Replace 2 or more consecutive newlines with a single newline
+	doubleNewlineRE := regexp.MustCompile(`\n{2,}`)
+	s = doubleNewlineRE.ReplaceAllString(s, "\n")
+	return s
 }
