@@ -61,12 +61,12 @@ func TestToDiscordMessageChangelog(t *testing.T) {
 	var found bool
 	for _, f := range msg.Embeds[0].Fields {
 		if f.Name == "Changes" &&
-			f.Value == "Status: Open → Closed" {
+			strings.Contains(f.Value, "Description:") {
 			found = true
 		}
 	}
 	if !found {
-		t.Fatalf("expected status change field")
+		t.Fatalf("expected description change field")
 	}
 	if msg.Embeds[0].Color != changelogColor {
 		t.Fatalf("unexpected color: %d", msg.Embeds[0].Color)

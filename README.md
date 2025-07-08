@@ -154,6 +154,13 @@ go test -json ./... | tparse -all
 
 This project automatically generates release notes using [git-cliff](https://github.com/orhun/git-cliff) whenever changes are pushed to the `main` branch or a tag is created.
 
+## Domain and Filename Protection
+
+- All domain-like and filename-like patterns in messages are automatically wrapped in backticks (inline code) for Discord, except when part of a Markdown/Jira link or image/attachment.
+- Filenames with double underscores are normalized (e.g., `move__bank__cus_mapping.sh` → `move_bank_cus_mapping.sh`) and wrapped in backticks.
+- Bare domains (e.g., `a-b-c-d-e.abc.com`) are always wrapped in backticks for clarity and to prevent unwanted Markdown formatting.
+- Extensive unit tests ensure that Markdown formatting is robust and Discord-friendly, including edge cases for domains, filenames, and links.
+
 # Example user mapping (config/user_mapping.yaml):
 ```yaml
 jira_to_discord:

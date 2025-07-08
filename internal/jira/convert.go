@@ -48,6 +48,26 @@ func truncateString(s string, max int) string {
 	return s
 }
 
+// isIncompleteMarkdown checks for unclosed backticks, brackets, or code blocks.
+func isIncompleteMarkdown(s string) bool {
+	// Unclosed inline code
+	if strings.Count(s, "`")%2 != 0 {
+		return true
+	}
+	// Unclosed code block
+	if strings.Count(s, "```")%2 != 0 {
+		return true
+	}
+	// Unclosed markdown link
+	if strings.Count(s, "[") != strings.Count(s, "]") {
+		return true
+	}
+	if strings.Count(s, "(") != strings.Count(s, ")") {
+		return true
+	}
+	return false
+}
+
 // ToDiscordMessage converts a Jira webhook payload into a Discord message.
 func ToDiscordMessage(w Webhook, baseURL string) discord.WebhookMessage {
 	issueURL := ""
@@ -70,10 +90,12 @@ func ToDiscordMessage(w Webhook, baseURL string) discord.WebhookMessage {
 		desc = ""
 	} else {
 		desc = w.Issue.Fields.Description
-		desc = utils.ProtectDomains(desc)
-		desc = utils.ReplaceJiraMentionsWithDiscord(desc)
+		desc = utils.ProtectDomainsAndFiles(desc)
 		desc = JiraToMarkdown(desc)
 		desc = truncateString(desc, descMax)
+		if isIncompleteMarkdown(desc) {
+			desc = "`...`"
+		}
 	}
 
 	embed := discord.Embed{
@@ -103,13 +125,12 @@ func ToDiscordMessage(w Webhook, baseURL string) discord.WebhookMessage {
 
 	if w.Comment != nil {
 		commentBody := w.Comment.Body
-		commentBody = utils.ProtectDomains(commentBody)
-		fmt.Println("[DEBUG] After ProtectDomains:", commentBody)
-		commentBody = utils.ReplaceJiraMentionsWithDiscord(commentBody)
-		fmt.Println("[DEBUG] After ReplaceJiraMentionsWithDiscord:", commentBody)
+		commentBody = utils.ProtectDomainsAndFiles(commentBody)
 		commentBody = JiraToMarkdown(commentBody)
-		fmt.Println("[DEBUG] After JiraToMarkdown:", commentBody)
 		commentBody = truncateString(commentBody, fieldValueMax)
+		if isIncompleteMarkdown(commentBody) {
+			commentBody = "`...`"
+		}
 		embed.Fields = append(embed.Fields, discord.Field{
 			Name:   truncateString("Comment", fieldNameMax),
 			Value:  commentBody,
@@ -132,8 +153,18 @@ func ToDiscordMessage(w Webhook, baseURL string) discord.WebhookMessage {
 			if strings.ToLower(item.Field) == "status" {
 				name = "Status"
 			}
-			from := JiraToMarkdown(item.FromString)
-			to := JiraToMarkdown(item.ToString)
+			from := utils.ProtectDomainsAndFiles(item.FromString)
+			from = JiraToMarkdown(from)
+			from = truncateString(from, fieldValueMax)
+			if isIncompleteMarkdown(from) {
+				from = "`...`"
+			}
+			to := utils.ProtectDomainsAndFiles(item.ToString)
+			to = JiraToMarkdown(to)
+			to = truncateString(to, fieldValueMax)
+			if isIncompleteMarkdown(to) {
+				to = "`...`"
+			}
 			var change string
 			if item.FromString == "" {
 				change = fmt.Sprintf("%s set to %s", name, utils.DiscordMentionForJiraUser(to))

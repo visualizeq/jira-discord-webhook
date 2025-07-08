@@ -4,6 +4,8 @@ package jira
 import (
 	"regexp"
 	"strings"
+
+	"jira-discord-webhook/internal/utils"
 )
 
 // JiraToMarkdown converts Jira wiki markup to Markdown/Discord formatting.
@@ -95,6 +97,8 @@ func JiraToMarkdown(s string) string {
 		if seg.isCode {
 			continue
 		}
+		// REMOVE: Protect domains and filenames with inline code BEFORE markdown formatting
+		// seg.text = utils.ProtectDomainsAndFiles(seg.text)
 		// Links: [text|url] -> [text](url), but remove protocol from text if text is a URL
 		jiraLinkRE := regexp.MustCompile(`\[(.+?)\|([^\]]+)\]`)
 		seg.text = jiraLinkRE.ReplaceAllStringFunc(seg.text, func(m string) string {
@@ -202,8 +206,16 @@ func JiraToMarkdown(s string) string {
 		// Removed table header and row reconstruction
 		// Attachment: [^file.ext] -> file.txt
 		seg.text = regexp.MustCompile(`\[\^([^\]]+)\]`).ReplaceAllString(seg.text, "$1")
-		// Image: !img.png! -> ![](img.png)
-		seg.text = regexp.MustCompile(`!([^!]+)!`).ReplaceAllString(seg.text, "![]($1)")
+		// Image: !img.png! -> `img.png`
+		seg.text = regexp.MustCompile(`!([^!]+)!`).ReplaceAllStringFunc(seg.text, func(m string) string {
+			imgRE := regexp.MustCompile(`!([^!]+)!`)
+			parts := imgRE.FindStringSubmatch(m)
+			if len(parts) == 2 {
+				filename := parts[1]
+				return "`" + filename + "`"
+			}
+			return m
+		})
 		// Links: [text|url] -> [text](url)
 		jiraLinkRE = regexp.MustCompile(`\[(.+?)\|([^\]]+)\]`)
 		seg.text = jiraLinkRE.ReplaceAllStringFunc(seg.text, func(m string) string {
@@ -274,6 +286,8 @@ func JiraToMarkdown(s string) string {
 			}
 		}
 		seg.text = rebuilt.String()
+		// Protect domains and filenames with inline code
+		seg.text = utils.ProtectDomainsAndFiles(seg.text)
 		segments[i] = seg
 	}
 	// Reassemble
@@ -282,6 +296,8 @@ func JiraToMarkdown(s string) string {
 		out.WriteString(seg.text)
 	}
 	s = out.String()
+	// Protect domains and filenames with inline code (only once, after all formatting)
+	s = utils.ProtectDomainsAndFiles(s)
 	// Replace any block of consecutive table-like lines with a single [TABLE Content]
 	tableLikeLineRE := regexp.MustCompile(`^[ \t]*\|.*$|^.*\|[ \t]*$|^[ \t]*\[.*\]\(.*\)[ \t]*\|?[ \t]*$`)
 	lines := strings.Split(s, "\n")
