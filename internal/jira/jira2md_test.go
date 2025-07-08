@@ -45,6 +45,7 @@ func TestJiraToMarkdown(t *testing.T) {
 		{"quote", `{quote}line1\nline2{quote}`, "> line1\n> line2"},
 		{"tableHeader", "||A||B||", "[TABLE Content]"},
 		{"tableRow", "|1|2|", "[TABLE Content]"},
+		{"jiraImageWithAttrs", "!image-20250609-074756.png|width=100%,alt=\"image-20250609-074756.png\"!", "`image-20250609-074756.png`"},
 	}
 	for _, tc := range tests {
 		t.Run(tc.name, func(t *testing.T) {

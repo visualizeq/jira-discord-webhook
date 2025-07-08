@@ -206,16 +206,8 @@ func JiraToMarkdown(s string) string {
 		// Removed table header and row reconstruction
 		// Attachment: [^file.ext] -> file.txt
 		seg.text = regexp.MustCompile(`\[\^([^\]]+)\]`).ReplaceAllString(seg.text, "$1")
-		// Image: !img.png! -> `img.png`
-		seg.text = regexp.MustCompile(`!([^!]+)!`).ReplaceAllStringFunc(seg.text, func(m string) string {
-			imgRE := regexp.MustCompile(`!([^!]+)!`)
-			parts := imgRE.FindStringSubmatch(m)
-			if len(parts) == 2 {
-				filename := parts[1]
-				return "`" + filename + "`"
-			}
-			return m
-		})
+		// Image: !img.png! or !img.png|width=100%! or !img.png|width=100%,alt="img.png"! -> `img.png`
+		seg.text = regexp.MustCompile(`!([^!|\n]+)(?:\|[^!\n]*)?!`).ReplaceAllString(seg.text, "`$1`")
 		// Links: [text|url] -> [text](url)
 		jiraLinkRE = regexp.MustCompile(`\[(.+?)\|([^\]]+)\]`)
 		seg.text = jiraLinkRE.ReplaceAllStringFunc(seg.text, func(m string) string {
@@ -324,5 +316,7 @@ func JiraToMarkdown(s string) string {
 	// Replace 2 or more consecutive newlines with a single newline
 	doubleNewlineRE := regexp.MustCompile(`\n{2,}`)
 	s = doubleNewlineRE.ReplaceAllString(s, "\n")
+	// FINAL: Remove any remaining Jira image markup globally
+	s = regexp.MustCompile(`!([^!|\n]+)(?:\|[^!\n]*)?!`).ReplaceAllString(s, "`$1`")
 	return s
 }
