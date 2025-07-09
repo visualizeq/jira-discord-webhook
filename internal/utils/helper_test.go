@@ -8,12 +8,12 @@ func TestProtectDomainsAndFiles(t *testing.T) {
 		in   string
 		out  string
 	}{
-		{"bulletDomain", "* a-b-c-d-e.abc.com (111.222.232.98)", "* `a-b-c-d-e.abc.com` (`111.222`.`232.98`)"},
+		{"bulletDomain", "* a-b-c-d-e.abc.com (111.222.232.98)", "* `a-b-c-d-e.abc.com` (`111.222.232.98`)"},
 		{"fullLineDomain", "a-b-c-d-e.abc.com", "`a-b-c-d-e.abc.com`"},
-		{"subdomainTLD", "foo.bar.co.uk", "`foo.bar`.`co.uk`"},
+		{"subdomainTLD", "foo.bar.co.uk", "`foo.bar.co.uk`"},
 		{"filenameMultiDot", "archive.tar.gz", "`archive.tar.gz`"},
 		{"inlineDomain", "Visit a-b-c-d-e.abc.com for info", "Visit `a-b-c-d-e.abc.com` for info"},
-		{"multipleDomains", "a-b-c-d-e.abc.com and x.y.z.com", "`a-b-c-d-e.abc.com` and `x.y`.`z.com`"},
+		{"multipleDomains", "a-b-c-d-e.abc.com and x.y.z.com", "`a-b-c-d-e.abc.com` and `x.y.z.com`"},
 		{"noDomain", "hello world", "hello world"},
 		{"domainInBulletWithExtraText", "* see a-b-c-d-e.abc.com for info", "* see `a-b-c-d-e.abc.com` for info"},
 		{"filename", "This is file.txt", "This is `file.txt`"},
@@ -28,6 +28,7 @@ func TestProtectDomainsAndFiles(t *testing.T) {
 		{"domainAtStart", "abc.com is up", "`abc.com` is up"},
 		{"domainAtEnd", "see abc.com", "see `abc.com`"},
 		{"domainWithPunct", "abc.com, xyz.com.", "`abc.com`, `xyz.com`."},
+		{"jiraImageAlreadyWrapped", "`Screenshot 2025-04-17 at 14.39.17.png`", "`Screenshot 2025-04-17 at 14.39.17.png`"},
 	}
 	for _, tc := range tests {
 		t.Run(tc.name, func(t *testing.T) {

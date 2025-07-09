@@ -90,7 +90,6 @@ func ToDiscordMessage(w Webhook, baseURL string) discord.WebhookMessage {
 		desc = ""
 	} else {
 		desc = w.Issue.Fields.Description
-		desc = utils.ProtectDomainsAndFiles(desc)
 		desc = JiraToMarkdown(desc)
 		desc = truncateString(desc, descMax)
 		if isIncompleteMarkdown(desc) {

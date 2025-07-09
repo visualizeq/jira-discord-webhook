@@ -5,15 +5,16 @@ import (
 	"strings"
 )
 
-// Improved domain pattern: match full domains with subdomains and TLDs (e.g., x.y.z.com)
-var domainPattern = regexp.MustCompile(`\b([a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)+)\b`)
+// Domain pattern: match domains and IP addresses as single units
+var domainPattern = regexp.MustCompile(`\b([a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*\.[a-zA-Z]{2,}|\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})\b`)
+var ipPattern = regexp.MustCompile(`\b(\d{1,3}\.\d{1,3})\.(\d{1,3}\.\d{1,3})\b`)
 
 // ProtectDomainsAndFiles wraps domain-like and filename-like patterns in inline code, with triple backticks if the line is only a domain.
 func ProtectDomainsAndFiles(s string) string {
 	linkPattern := regexp.MustCompile(`\[[^\]\[]+\|[^\]\[]+\]`) // Jira-style [text|url]
 	mdLinkPattern := regexp.MustCompile(`\[[^\]]+\]\([^\)]+\)`) // Markdown [text](url)
-	// Improved: match filename and optional trailing punctuation, check boundary in code
-	filenameFullRE := regexp.MustCompile(`\b([\w\-]+(?:_[\w\-]+)*\.[a-zA-Z0-9]+)([\.,;:!\?\)\]\}]?)`)
+	// Match filenames with word boundaries to avoid matching surrounding text
+	filenameFullRE := regexp.MustCompile(`\b([\w-]+(?:\.[\w-]+)*\.[a-zA-Z0-9]+)([\.,;:!\?\)\]\}]?)`)
 
 	lines := strings.Split(s, "\n")
 	inCodeBlock := false
@@ -31,73 +32,72 @@ func ProtectDomainsAndFiles(s string) string {
 		linkRanges := findAllRanges(line, linkPattern)
 		linkRanges = append(linkRanges, findAllRanges(line, mdLinkPattern)...)
 
-		// PATCH: Always normalize and wrap filenames with double underscores
-		line = filenameFullRE.ReplaceAllStringFunc(line, func(m string) string {
-			matches := filenameFullRE.FindStringSubmatch(m)
-			if len(matches) != 3 {
-				return m
-			}
-			filename := matches[1]
-			trailing := matches[2]
-			idx := strings.Index(line, m)
-			endIdx := idx + len(m)
-			nextChar := byte(' ')
-			if endIdx < len(line) {
-				nextChar = line[endIdx]
-			}
-			if endIdx < len(line) && (nextChar != ' ' && nextChar != '\n' && nextChar != '\t') {
-				return m
-			}
-			// Always normalize double underscores for filenames
-			norm := filename
-			for strings.Contains(norm, "__") {
-				norm = strings.ReplaceAll(norm, "__", "_")
-			}
-			// Always wrap normalized filename in backticks (unless already wrapped)
-			if strings.HasPrefix(norm, "`") && strings.HasSuffix(norm, "`") {
-				return norm + trailing
-			}
-			return "`" + norm + "`" + trailing
-		})
-		// PATCH END
+		// Add URL patterns to linkRanges to prevent wrapping domains in URLs
+		urlPattern := regexp.MustCompile(`https?://[^\s]+`)
+		linkRanges = append(linkRanges, findAllRanges(line, urlPattern)...)
 
-		// --- PATCH: Fix domain and filename wrapping to match test expectations ---
-		// Wrap all domain matches (not just those without dashes in the leftmost label)
-		matches := domainPattern.FindAllStringSubmatchIndex(line, -1)
+		// --- Wrap filenames using indices, build new line ---
+		matches := filenameFullRE.FindAllStringSubmatchIndex(line, -1)
 		if len(matches) > 0 {
 			var sb strings.Builder
 			last := 0
 			for _, m := range matches {
-				domainStart, domainEnd := m[0], m[1]
-				domain := line[domainStart:domainEnd]
-				if isInRanges(domainStart, domainEnd, linkRanges) || isInBackticks(line, domain) {
-					sb.WriteString(line[last:domainEnd])
-					last = domainEnd
+				start, end := m[0], m[1]
+				filenameStart, filenameEnd := m[2], m[3]
+				trailingStart, trailingEnd := m[4], m[5]
+				filename := line[filenameStart:filenameEnd]
+				trailing := ""
+				if trailingStart >= 0 && trailingEnd >= 0 && trailingEnd > trailingStart {
+					trailing = line[trailingStart:trailingEnd]
+				}
+				if isInBackticks(line, filename) || isInRanges(start, end, linkRanges) {
+					sb.WriteString(line[last:end])
+					last = end
 					continue
 				}
-				protocols := []string{"http://", "https://", "ftp://", "ftps://"}
-				isPartOfURL := false
-				for _, proto := range protocols {
-					if domainStart >= len(proto) && line[domainStart-len(proto):domainStart] == proto {
-						isPartOfURL = true
-						break
-					}
-				}
-				if isPartOfURL {
-					sb.WriteString(line[last:domainEnd])
-					last = domainEnd
+				// Skip domain-like patterns (simple domains without underscores or special chars)
+				if domainPattern.MatchString(filename) {
+					sb.WriteString(line[last:end])
+					last = end
 					continue
 				}
-				// Always wrap domain
-				wrapped := "`" + domain + "`"
-				sb.WriteString(line[last:domainStart])
+				norm := filename
+				for strings.Contains(norm, "__") {
+					norm = strings.ReplaceAll(norm, "__", "_")
+				}
+				wrapped := "`" + norm + "`" + trailing
+				sb.WriteString(line[last:start])
 				sb.WriteString(wrapped)
-				last = domainEnd
+				last = end
+			}
+			sb.WriteString(line[last:])
+			line = sb.String()
+		} // --- Wrap domains using indices, build new line ---
+		// Recalculate linkRanges for the modified line after filename processing
+		linkRanges = findAllRanges(line, linkPattern)
+		linkRanges = append(linkRanges, findAllRanges(line, mdLinkPattern)...)
+		linkRanges = append(linkRanges, findAllRanges(line, urlPattern)...)
+
+		matches = domainPattern.FindAllStringSubmatchIndex(line, -1)
+		if len(matches) > 0 {
+			var sb strings.Builder
+			last := 0
+			for _, m := range matches {
+				start, end := m[0], m[1]
+				domain := line[start:end]
+				if isInBackticks(line, domain) || isInRanges(start, end, linkRanges) {
+					sb.WriteString(line[last:end])
+					last = end
+					continue
+				}
+				wrapped := "`" + domain + "`"
+				sb.WriteString(line[last:start])
+				sb.WriteString(wrapped)
+				last = end
 			}
 			sb.WriteString(line[last:])
 			line = sb.String()
 		}
-		// --- PATCH END ---
 
 		lines[i] = line
 	}

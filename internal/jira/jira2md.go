@@ -219,65 +219,7 @@ func JiraToMarkdown(s string) string {
 		})
 		// Mentions: [~user] -> @user
 		seg.text = regexp.MustCompile(`\[~([^\]]+)\]`).ReplaceAllString(seg.text, "@$1")
-		// Now wrap bare domains/links in inline code, but skip inside []() and ![]() and also skip inside link text
-		// Split on Markdown links and Jira links, only wrap in non-link segments
-		// Allow for optional leading whitespace and list markers before the link/image/Jira link
-		linkOrImageOrJiraLinkRE := regexp.MustCompile(`[ \t\-*]*!?\[[^\]]*\]\([^\)]*\)|[ \t\-*]*\[[^\]|]+\|[^\]]+\]`)
-		parts := linkOrImageOrJiraLinkRE.Split(seg.text, -1)
-		matches := linkOrImageOrJiraLinkRE.FindAllStringIndex(seg.text, -1)
-		var rebuilt strings.Builder
-		for i, part := range parts {
-			// Refined: Only wrap domains that are surrounded by whitespace, start/end, or punctuation
-			urlRE := regexp.MustCompile(`(?m)(^|[\s>\(\[\{])((?:https?|ftp)://[\w\-._~:/?#\[\]@!$&'()*+,;=%]+)([\s\.,;:!?\)\]\}\n]|$)`)
-			part = urlRE.ReplaceAllStringFunc(part, func(m string) string {
-				matches := urlRE.FindStringSubmatch(m)
-				if len(matches) != 4 {
-					return m
-				}
-				prefix := matches[1]
-				url := matches[2]
-				suffix := matches[3]
-				if strings.HasPrefix(url, "`") && strings.HasSuffix(url, "`") {
-					return m // already wrapped
-				}
-				return prefix + "`" + url + "`" + suffix
-			})
-			domainRE := regexp.MustCompile(`(?m)(^|[\s>\(\[\{])([a-zA-Z0-9][a-zA-Z0-9\-]*\.[a-zA-Z]{2,})([\s\.,;:!?\)\]\}\n]|$)`)
-			part = domainRE.ReplaceAllStringFunc(part, func(m string) string {
-				matches := domainRE.FindStringSubmatch(m)
-				if len(matches) != 4 {
-					return m
-				}
-				prefix := matches[1]
-				domain := matches[2]
-				suffix := matches[3]
-				if strings.HasPrefix(domain, "`") && strings.HasSuffix(domain, "`") {
-					return m // already wrapped
-				}
-				if strings.Contains(domain, "@") {
-					return m // email
-				}
-				// Only wrap if not part of a larger word (e.g., not a-b-c-d-e.abc.com)
-				if len(prefix) > 0 && (prefix[len(prefix)-1] == '-' || prefix[len(prefix)-1] == '.') {
-					return m
-				}
-				if len(suffix) > 0 && (suffix[0] == '-' || suffix[0] == '.') {
-					return m
-				}
-				// Do not wrap if it looks like a filename (e.g., file.txt, file-1.txt)
-				filenameRE := regexp.MustCompile(`^[\w\-.]+\.[a-zA-Z0-9]+$`)
-				if filenameRE.MatchString(domain) {
-					return m
-				}
-				return prefix + "`" + domain + "`" + suffix
-			})
-			rebuilt.WriteString(part)
-			if i < len(matches) {
-				// Add the matched link/image/Jira link back untouched
-				rebuilt.WriteString(seg.text[matches[i][0]:matches[i][1]])
-			}
-		}
-		seg.text = rebuilt.String()
+
 		// Protect domains and filenames with inline code
 		seg.text = utils.ProtectDomainsAndFiles(seg.text)
 		segments[i] = seg
@@ -288,8 +230,7 @@ func JiraToMarkdown(s string) string {
 		out.WriteString(seg.text)
 	}
 	s = out.String()
-	// Protect domains and filenames with inline code (only once, after all formatting)
-	s = utils.ProtectDomainsAndFiles(s)
+	// Final processing already done per segment above
 	// Replace any block of consecutive table-like lines with a single [TABLE Content]
 	tableLikeLineRE := regexp.MustCompile(`^[ \t]*\|.*$|^.*\|[ \t]*$|^[ \t]*\[.*\]\(.*\)[ \t]*\|?[ \t]*$`)
 	lines := strings.Split(s, "\n")
