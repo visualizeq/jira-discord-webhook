@@ -14,7 +14,9 @@ func ProtectDomainsAndFiles(s string) string {
 	linkPattern := regexp.MustCompile(`\[[^\]\[]+\|[^\]\[]+\]`) // Jira-style [text|url]
 	mdLinkPattern := regexp.MustCompile(`\[[^\]]+\]\([^\)]+\)`) // Markdown [text](url)
 	// Match filenames with word boundaries to avoid matching surrounding text
-	filenameFullRE := regexp.MustCompile(`\b([\w-]+(?:\.[\w-]+)*\.[a-zA-Z0-9]+)([\.,;:!\?\)\]\}]?)`)
+	// Modified to require at least one letter in either the filename or extension
+	// to avoid matching pure numeric patterns like "00.0" from datetime strings
+	filenameFullRE := regexp.MustCompile(`\b([\w-]*[a-zA-Z][\w-]*(?:\.[\w-]+)*\.[a-zA-Z0-9]+|[\w-]+(?:\.[\w-]+)*\.[a-zA-Z]+[\w-]*)([\.,;:!\?\)\]\}]?)`)
 
 	lines := strings.Split(s, "\n")
 	inCodeBlock := false

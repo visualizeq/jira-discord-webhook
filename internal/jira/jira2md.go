@@ -222,6 +222,10 @@ func JiraToMarkdown(s string) string {
 
 		// Protect domains and filenames with inline code
 		seg.text = utils.ProtectDomainsAndFiles(seg.text)
+		// Datetime patterns: wrap in backticks for inline code formatting
+		// Matches patterns like "2025-07-04 00:00:00.0" or "2025-07-11 00:00:00.0"
+		datetimeRE := regexp.MustCompile(`\b(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\.\d)\b`)
+		seg.text = datetimeRE.ReplaceAllString(seg.text, "`$1`")
 		segments[i] = seg
 	}
 	// Reassemble

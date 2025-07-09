@@ -29,6 +29,8 @@ func TestProtectDomainsAndFiles(t *testing.T) {
 		{"domainAtEnd", "see abc.com", "see `abc.com`"},
 		{"domainWithPunct", "abc.com, xyz.com.", "`abc.com`, `xyz.com`."},
 		{"jiraImageAlreadyWrapped", "`Screenshot 2025-04-17 at 14.39.17.png`", "`Screenshot 2025-04-17 at 14.39.17.png`"},
+		{"datetimeStringNotWrapped", "2025-07-04 00:00:00.0", "2025-07-04 00:00:00.0"},
+		{"datetimeStringInChangeNotWrapped", "Duedate: 2025-07-04 00:00:00.0 → 2025-07-11 00:00:00.0", "Duedate: 2025-07-04 00:00:00.0 → 2025-07-11 00:00:00.0"},
 	}
 	for _, tc := range tests {
 		t.Run(tc.name, func(t *testing.T) {

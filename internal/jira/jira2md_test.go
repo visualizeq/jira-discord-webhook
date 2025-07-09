@@ -46,6 +46,8 @@ func TestJiraToMarkdown(t *testing.T) {
 		{"tableHeader", "||A||B||", "[TABLE Content]"},
 		{"tableRow", "|1|2|", "[TABLE Content]"},
 		{"jiraImageWithAttrs", "!image-20250609-074756.png|width=100%,alt=\"image-20250609-074756.png\"!", "`image-20250609-074756.png`"},
+		{"datetime", "2025-07-04 00:00:00.0", "`2025-07-04 00:00:00.0`"},
+		{"datetimeInText", "Changed on 2025-07-04 00:00:00.0", "Changed on `2025-07-04 00:00:00.0`"},
 	}
 	for _, tc := range tests {
 		t.Run(tc.name, func(t *testing.T) {
