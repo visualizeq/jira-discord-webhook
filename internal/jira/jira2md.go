@@ -217,8 +217,8 @@ func JiraToMarkdown(s string) string {
 			}
 			return m
 		})
-		// Mentions: [~user] -> @user
-		seg.text = regexp.MustCompile(`\[~([^\]]+)\]`).ReplaceAllString(seg.text, "@$1")
+		// Mentions: [~user] -> @user or Discord mention if mapped
+		seg.text = utils.ReplaceJiraMentionsWithDiscord(seg.text)
 
 		// Protect domains and filenames with inline code
 		seg.text = utils.ProtectDomainsAndFiles(seg.text)

@@ -102,6 +102,23 @@ func TestReplaceJiraMentionsWithDiscord(t *testing.T) {
 	if got := ReplaceJiraMentionsWithDiscord(in); got != want {
 		t.Errorf("unknownAccountId: got %q, want %q", got, want)
 	}
+
+	// Test simple user mention (fallback to @user)
+	in = "Hello [~bob]!"
+	want = "Hello @bob!"
+	if got := ReplaceJiraMentionsWithDiscord(in); got != want {
+		t.Errorf("simpleUserMention: got %q, want %q", got, want)
+	}
+
+	// Test simple user mention with mapping
+	jiraToDiscord.JiraToDiscord = append(jiraToDiscord.JiraToDiscord, JiraUserMapping{
+		AccountID: "bob", DisplayName: "Bob", DiscordID: "333333333333333333",
+	})
+	in = "Hello [~bob]!"
+	want = "Hello <@333333333333333333>!"
+	if got := ReplaceJiraMentionsWithDiscord(in); got != want {
+		t.Errorf("simpleUserMentionWithMapping: got %q, want %q", got, want)
+	}
 }
 
 func TestReplaceJiraMentionsWithDiscord_NoMentions(t *testing.T) {

@@ -43,16 +43,38 @@ func DiscordMentionForJiraUser(key string) string {
 }
 
 var accountIdPattern = regexp.MustCompile(`\[~accountid:([a-zA-Z0-9:.-]+)\]`)
+var simpleUserPattern = regexp.MustCompile(`\[~([a-zA-Z0-9:.-]+)\]`)
 
-// ReplaceJiraMentionsWithDiscord replaces all [~accountid:...] in text with Discord mentions.
+// ReplaceJiraMentionsWithDiscord replaces all [~accountid:...] and [~user] in text with Discord mentions.
 func ReplaceJiraMentionsWithDiscord(text string) string {
-	return accountIdPattern.ReplaceAllStringFunc(text, func(match string) string {
+	// First handle accountid pattern
+	text = accountIdPattern.ReplaceAllStringFunc(text, func(match string) string {
 		groups := accountIdPattern.FindStringSubmatch(match)
 		if len(groups) == 2 {
 			return DiscordMentionForJiraUser(groups[1])
 		}
 		return match
 	})
+
+	// Then handle simple user pattern (only if accountid pattern didn't match)
+	text = simpleUserPattern.ReplaceAllStringFunc(text, func(match string) string {
+		groups := simpleUserPattern.FindStringSubmatch(match)
+		if len(groups) == 2 {
+			// Don't convert if it's already a Discord mention
+			if strings.HasPrefix(groups[1], "@") {
+				return match
+			}
+			mapped := DiscordMentionForJiraUser(groups[1])
+			// If no mapping found, default to @user format
+			if mapped == groups[1] {
+				return "@" + groups[1]
+			}
+			return mapped
+		}
+		return match
+	})
+
+	return text
 }
 
 // findAllRanges returns a slice of (start, end) pairs for all matches of re in s
