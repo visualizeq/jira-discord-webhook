@@ -1,0 +1,244 @@
+{
+    "timestamp": 1752033912721,
+    "webhookEvent": "jira:issue_updated",
+    "issue_event_type_name": "issue_updated",
+    "user": {
+        "self": "https://jira.atlassian.net/rest/api/2/user?accountId=5ebde4017dab3a0bb475f4c3",
+        "accountId": "5ebde4017dab3a0bb475f4c3",
+        "avatarUrls": {
+            "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/initials/PW-1.png",
+            "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/initials/PW-1.png",
+            "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/initials/PW-1.png",
+            "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/initials/PW-1.png"
+        },
+        "displayName": "Pisud Waprakhon",
+        "active": true,
+        "timeZone": "Asia/Bangkok",
+        "accountType": "atlassian"
+    },
+    "issue": {
+        "id": "21243",
+        "self": "https://jira.atlassian.net/rest/api/2/21243",
+        "key": "DVOPS-75",
+        "fields": {
+            "statuscategorychangedate": "2025-06-25T14:10:56.644+0700",
+            "issuetype": {
+                "self": "https://jira.atlassian.net/rest/api/2/issuetype/10001",
+                "id": "10001",
+                "description": "Tasks track small, distinct pieces of work.",
+                "iconUrl": "https://jira.atlassian.net/rest/api/2/universal_avatar/view/type/issuetype/avatar/10318?size=medium",
+                "name": "Task",
+                "subtask": false,
+                "avatarId": 10318,
+                "entityId": "5436b27c-6b55-4357-9c73-c194f1336561",
+                "hierarchyLevel": 0
+            },
+            "parent": {
+                "id": "20718",
+                "key": "DVOPS-49",
+                "self": "https://jira.atlassian.net/rest/api/2/issue/20718",
+                "fields": {
+                    "summary": "Schedule Job",
+                    "status": {
+                        "self": "https://jira.atlassian.net/rest/api/2/status/10000",
+                        "description": "",
+                        "iconUrl": "https://jira.atlassian.net/",
+                        "name": "Backlog",
+                        "id": "10000",
+                        "statusCategory": {
+                            "self": "https://jira.atlassian.net/rest/api/2/statuscategory/2",
+                            "id": 2,
+                            "key": "new",
+                            "colorName": "blue-gray",
+                            "name": "To Do"
+                        }
+                    },
+                    "priority": {
+                        "self": "https://jira.atlassian.net/rest/api/2/priority/3",
+                        "iconUrl": "https://jira.atlassian.net/images/icons/priorities/medium_new.svg",
+                        "name": "Medium",
+                        "id": "3"
+                    },
+                    "issuetype": {
+                        "self": "https://jira.atlassian.net/rest/api/2/issuetype/10004",
+                        "id": "10004",
+                        "description": "A collection of related bugs, stories, and tasks.",
+                        "iconUrl": "https://jira.atlassian.net/rest/api/2/universal_avatar/view/type/issuetype/avatar/10307?size=medium",
+                        "name": "Epic",
+                        "subtask": false,
+                        "avatarId": 10307,
+                        "entityId": "b082d708-b3fd-4f0f-b21a-b508b5ab0d03",
+                        "hierarchyLevel": 1
+                    }
+                }
+            },
+            "components": [],
+            "timespent": null,
+            "timeoriginalestimate": null,
+            "project": {
+                "self": "https://jira.atlassian.net/rest/api/2/project/10000",
+                "id": "10000",
+                "key": "DVOPS",
+                "name": "DevOps",
+                "projectTypeKey": "software",
+                "simplified": true,
+                "avatarUrls": {
+                    "48x48": "https://jira.atlassian.net/rest/api/2/universal_avatar/view/type/project/avatar/10406",
+                    "24x24": "https://jira.atlassian.net/rest/api/2/universal_avatar/view/type/project/avatar/10406?size=small",
+                    "16x16": "https://jira.atlassian.net/rest/api/2/universal_avatar/view/type/project/avatar/10406?size=xsmall",
+                    "32x32": "https://jira.atlassian.net/rest/api/2/universal_avatar/view/type/project/avatar/10406?size=medium"
+                }
+            },
+            "description": "Migtarion Triger API ai-dwh เริ่มเอาของตัวนี้ไปก่อนเพราะว่าแจ้ง กับผู้เกี่ยวข้องแล้ว และ รอ pvt\n\nLink: `[URL ...]` ",
+            "fixVersions": [],
+            "statusCategory": {
+                "self": "https://jira.atlassian.net/rest/api/2/statuscategory/2",
+                "id": 2,
+                "key": "new",
+                "colorName": "blue-gray",
+                "name": "New"
+            },
+            "aggregatetimespent": null,
+            "resolution": null,
+            "customfield_10035": null,
+            "customfield_10015": "2025-06-30",
+            "timetracking": {},
+            "security": null,
+            "attachment": [],
+            "aggregatetimeestimate": null,
+            "resolutiondate": null,
+            "workratio": -1,
+            "summary": "Migration Schedule Job API on Prod",
+            "watches": {
+                "self": "https://jira.atlassian.net/rest/api/2/issue/DVOPS-75/watchers",
+                "watchCount": 2,
+                "isWatching": true
+            },
+            "issuerestriction": {
+                "issuerestrictions": {},
+                "shouldDisplay": true
+            },
+            "lastViewed": "2025-07-09T11:05:07.704+0700",
+            "creator": {
+                "self": "https://jira.atlassian.net/rest/api/2/user?accountId=5ebde4017dab3a0bb475f4c3",
+                "accountId": "5ebde4017dab3a0bb475f4c3",
+                "avatarUrls": {
+                    "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/initials/PW-1.png",
+                    "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/initials/PW-1.png",
+                    "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/initials/PW-1.png",
+                    "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/initials/PW-1.png"
+                },
+                "displayName": "Pisud Waprakhon",
+                "active": true,
+                "timeZone": "Asia/Bangkok",
+                "accountType": "atlassian"
+            },
+            "subtasks": [],
+            "created": "2025-06-25T14:10:56.325+0700",
+            "customfield_10020": null,
+            "reporter": {
+                "self": "https://jira.atlassian.net/rest/api/2/user?accountId=5ebde4017dab3a0bb475f4c3",
+                "accountId": "5ebde4017dab3a0bb475f4c3",
+                "avatarUrls": {
+                    "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/initials/PW-1.png",
+                    "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/initials/PW-1.png",
+                    "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/initials/PW-1.png",
+                    "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/initials/PW-1.png"
+                },
+                "displayName": "Pisud Waprakhon",
+                "active": true,
+                "timeZone": "Asia/Bangkok",
+                "accountType": "atlassian"
+            },
+            "customfield_10021": null,
+            "aggregateprogress": {
+                "progress": 0,
+                "total": 0
+            },
+            "priority": {
+                "self": "https://jira.atlassian.net/rest/api/2/priority/4",
+                "iconUrl": "https://jira.atlassian.net/images/icons/priorities/low_new.svg",
+                "name": "Low",
+                "id": "4"
+            },
+            "customfield_10001": null,
+            "labels": [],
+            "customfield_10016": null,
+            "customfield_10117": [
+                {
+                    "self": "https://jira.atlassian.net/rest/api/2/user?accountId=5fa65e09c82473007066151c",
+                    "accountId": "5fa65e09c82473007066151c",
+                    "avatarUrls": {
+                        "48x48": "https://secure.gravatar.com/avatar/ed156fb47b855688017fb2f1a9dd512c?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FMR-6.png",
+                        "24x24": "https://secure.gravatar.com/avatar/ed156fb47b855688017fb2f1a9dd512c?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FMR-6.png",
+                        "16x16": "https://secure.gravatar.com/avatar/ed156fb47b855688017fb2f1a9dd512c?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FMR-6.png",
+                        "32x32": "https://secure.gravatar.com/avatar/ed156fb47b855688017fb2f1a9dd512c?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FMR-6.png"
+                    },
+                    "displayName": "Metis Rattanachai",
+                    "active": true,
+                    "timeZone": "Asia/Bangkok",
+                    "accountType": "atlassian"
+                }
+            ],
+            "environment": null,
+            "customfield_10019": "0|i01un3:",
+            "timeestimate": null,
+            "aggregatetimeoriginalestimate": null,
+            "versions": [],
+            "duedate": "2025-07-11",
+            "progress": {
+                "progress": 0,
+                "total": 0
+            },
+            "votes": {
+                "self": "https://jira.atlassian.net/rest/api/2/issue/DVOPS-75/votes",
+                "votes": 0,
+                "hasVoted": false
+            },
+            "issuelinks": [],
+            "assignee": {
+                "self": "https://jira.atlassian.net/rest/api/2/user?accountId=5ebde4017dab3a0bb475f4c3",
+                "accountId": "5ebde4017dab3a0bb475f4c3",
+                "avatarUrls": {
+                    "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/initials/PW-1.png",
+                    "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/initials/PW-1.png",
+                    "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/initials/PW-1.png",
+                    "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/initials/PW-1.png"
+                },
+                "displayName": "Pisud Waprakhon",
+                "active": true,
+                "timeZone": "Asia/Bangkok",
+                "accountType": "atlassian"
+            },
+            "updated": "2025-07-09T11:05:12.721+0700",
+            "status": {
+                "self": "https://jira.atlassian.net/rest/api/2/status/10005",
+                "description": "",
+                "iconUrl": "https://jira.atlassian.net/",
+                "name": "Hold",
+                "id": "10005",
+                "statusCategory": {
+                    "self": "https://jira.atlassian.net/rest/api/2/statuscategory/2",
+                    "id": 2,
+                    "key": "new",
+                    "colorName": "blue-gray",
+                    "name": "New"
+                }
+            }
+        }
+    },
+    "changelog": {
+        "id": "50153",
+        "items": [
+            {
+                "field": "duedate",
+                "fieldtype": "jira",
+                "fieldId": "duedate",
+                "from": "2025-07-04",
+                "fromString": "2025-07-04 00:00:00.0",
+                "to": "2025-07-11",
+                "toString": "2025-07-11 00:00:00.0"
+            }
+        ]
+    }
+}

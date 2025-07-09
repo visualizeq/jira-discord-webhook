@@ -1,0 +1,347 @@
+{
+  "timestamp": 1751972660632,
+  "webhookEvent": "jira:issue_updated",
+  "issue_event_type_name": "issue_generic",
+  "user": {
+    "self": "https://jira.atlassian.net/rest/api/2/user?accountId=712020%3A1a0df378-f399-40bb-bc8f-ca66d95e68d7",
+    "accountId": "712020:1a0df378-f399-40bb-bc8f-ca66d95e68d7",
+    "avatarUrls": {
+      "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/initials/DK-2.png",
+      "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/initials/DK-2.png",
+      "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/initials/DK-2.png",
+      "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/initials/DK-2.png"
+    },
+    "displayName": "Montree Tipja",
+    "active": true,
+    "timeZone": "Asia/Bangkok",
+    "accountType": "atlassian"
+  },
+  "issue": {
+    "id": "19651",
+    "self": "https://jira.atlassian.net/rest/api/2/19651",
+    "key": "XPSOPS-16",
+    "fields": {
+      "statuscategorychangedate": "2025-07-08T18:04:20.633+0700",
+      "issuetype": {
+        "self": "https://jira.atlassian.net/rest/api/2/issuetype/10001",
+        "id": "10001",
+        "description": "Tasks track small, distinct pieces of work.",
+        "iconUrl": "https://jira.atlassian.net/rest/api/2/universal_avatar/view/type/issuetype/avatar/10318?size=medium",
+        "name": "Task",
+        "subtask": false,
+        "avatarId": 10318,
+        "entityId": "5436b27c-6b55-4357-9c73-c194f1336561",
+        "hierarchyLevel": 0
+      },
+      "parent": {
+        "id": "19668",
+        "key": "XPSOPS-20",
+        "self": "https://jira.atlassian.net/rest/api/2/issue/19668",
+        "fields": {
+          "summary": "Admin Portal",
+          "status": {
+            "self": "https://jira.atlassian.net/rest/api/2/status/10000",
+            "description": "",
+            "iconUrl": "https://jira.atlassian.net/",
+            "name": "Backlog",
+            "id": "10000",
+            "statusCategory": {
+              "self": "https://jira.atlassian.net/rest/api/2/statuscategory/2",
+              "id": 2,
+              "key": "new",
+              "colorName": "blue-gray",
+              "name": "To Do"
+            }
+          },
+          "priority": {
+            "self": "https://jira.atlassian.net/rest/api/2/priority/3",
+            "iconUrl": "https://jira.atlassian.net/images/icons/priorities/medium_new.svg",
+            "name": "Medium",
+            "id": "3"
+          },
+          "issuetype": {
+            "self": "https://jira.atlassian.net/rest/api/2/issuetype/10004",
+            "id": "10004",
+            "description": "Epics track collections of related bugs, stories, and tasks.",
+            "iconUrl": "https://jira.atlassian.net/rest/api/2/universal_avatar/view/type/issuetype/avatar/10307?size=medium",
+            "name": "Epic",
+            "subtask": false,
+            "avatarId": 10307,
+            "entityId": "b082d708-b3fd-4f0f-b21a-b508b5ab0d03",
+            "hierarchyLevel": 1
+          }
+        }
+      },
+      "components": [],
+      "timespent": null,
+      "timeoriginalestimate": null,
+      "description": "Tools สำหรับ IAM Team ใช้ในการ reset user password\n\nh2. Details\n\n* Export the changed password result to a .csv file and send it to email (eg. [iam@domain.tld|mailto:iam@domain.tld])\n* Support bulk process (can reset the password of a user in multiple hosts)\n* No one knows about the password if not include the email loop\n\nh2. Support platform\n\n* Linux user\n* Windows user\n* Database user\n\nh1. Init information\n\nh2. Input\n\n* Target Type (Linux, Windows, Database)\n* Target Hosts (Just one or multiple)\n* Username (eg. klprocjob)\n* Password (Can optional)\n* Random Password Length (min: 20)\n\nTentative timeline : 1 May 2025\n\n\n\nย้ายจาก Jira ของเดิมมา\n\n!Screenshot 2025-04-17 at 14.39.17.png|width=681,height=552,alt=\"Screenshot 2025-04-17 at 14.39.17.png\"!",
+      "project": {
+        "self": "https://jira.atlassian.net/rest/api/2/project/10000",
+        "id": "10000",
+        "key": "XPSOPS",
+        "name": "DevOps",
+        "projectTypeKey": "software",
+        "simplified": true,
+        "avatarUrls": {
+          "48x48": "https://jira.atlassian.net/rest/api/2/universal_avatar/view/type/project/avatar/10406",
+          "24x24": "https://jira.atlassian.net/rest/api/2/universal_avatar/view/type/project/avatar/10406?size=small",
+          "16x16": "https://jira.atlassian.net/rest/api/2/universal_avatar/view/type/project/avatar/10406?size=xsmall",
+          "32x32": "https://jira.atlassian.net/rest/api/2/universal_avatar/view/type/project/avatar/10406?size=medium"
+        }
+      },
+      "fixVersions": [],
+      "statusCategory": {
+        "self": "https://jira.atlassian.net/rest/api/2/statuscategory/3",
+        "id": 3,
+        "key": "done",
+        "colorName": "green",
+        "name": "Complete"
+      },
+      "aggregatetimespent": null,
+      "resolution": {
+        "self": "https://jira.atlassian.net/rest/api/2/resolution/10000",
+        "id": "10000",
+        "description": "Work has been completed on this work item.",
+        "name": "Done"
+      },
+      "customfield_10035": null,
+      "timetracking": {},
+      "customfield_10015": null,
+      "security": null,
+      "attachment": [
+        {
+          "self": "https://jira.atlassian.net/rest/api/2/attachment/28170",
+          "id": "28170",
+          "filename": "Screenshot 2025-04-17 at 14.39.17.png",
+          "author": {
+            "self": "https://jira.atlassian.net/rest/api/2/user?accountId=712020%3A1a0df378-f399-40bb-bc8f-ca66d95e68d7",
+            "accountId": "712020:1a0df378-f399-40bb-bc8f-ca66d95e68d7",
+            "avatarUrls": {
+              "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/initials/DK-2.png",
+              "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/initials/DK-2.png",
+              "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/initials/DK-2.png",
+              "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/initials/DK-2.png"
+            },
+            "displayName": "Montree Tipja",
+            "active": true,
+            "timeZone": "Asia/Bangkok",
+            "accountType": "atlassian"
+          },
+          "created": "2025-04-17T14:39:33.947+0700",
+          "size": 93087,
+          "mimeType": "image/png",
+          "content": "https://jira.atlassian.net/rest/api/2/attachment/content/28170",
+          "thumbnail": "https://jira.atlassian.net/rest/api/2/attachment/thumbnail/28170"
+        }
+      ],
+      "aggregatetimeestimate": null,
+      "resolutiondate": "2025-07-08T18:04:20.613+0700",
+      "workratio": -1,
+      "summary": "IAM Linux User Password Reset Tools",
+      "lastViewed": "2025-07-08T18:02:38.428+0700",
+      "issuerestriction": {
+        "issuerestrictions": {},
+        "shouldDisplay": true
+      },
+      "watches": {
+        "self": "https://jira.atlassian.net/rest/api/2/issue/XPSOPS-16/watchers",
+        "watchCount": 2,
+        "isWatching": true
+      },
+      "creator": {
+        "self": "https://jira.atlassian.net/rest/api/2/user?accountId=712020%3A1a0df378-f399-40bb-bc8f-ca66d95e68d7",
+        "accountId": "712020:1a0df378-f399-40bb-bc8f-ca66d95e68d7",
+        "avatarUrls": {
+          "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/initials/DK-2.png",
+          "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/initials/DK-2.png",
+          "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/initials/DK-2.png",
+          "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/initials/DK-2.png"
+        },
+        "displayName": "Montree Tipja",
+        "active": true,
+        "timeZone": "Asia/Bangkok",
+        "accountType": "atlassian"
+      },
+      "subtasks": [],
+      "created": "2025-04-17T14:36:19.842+0700",
+      "customfield_10020": null,
+      "reporter": {
+        "self": "https://jira.atlassian.net/rest/api/2/user?accountId=712020%3A1a0df378-f399-40bb-bc8f-ca66d95e68d7",
+        "accountId": "712020:1a0df378-f399-40bb-bc8f-ca66d95e68d7",
+        "avatarUrls": {
+          "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/initials/DK-2.png",
+          "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/initials/DK-2.png",
+          "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/initials/DK-2.png",
+          "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/initials/DK-2.png"
+        },
+        "displayName": "Montree Tipja",
+        "active": true,
+        "timeZone": "Asia/Bangkok",
+        "accountType": "atlassian"
+      },
+      "customfield_10021": null,
+      "aggregateprogress": {
+        "progress": 0,
+        "total": 0
+      },
+      "customfield_10001": {
+        "id": "796e0918-11a7-498f-99a3-535b6e9f419c",
+        "name": "DevOps Engineer",
+        "avatarUrl": "",
+        "isVisible": true,
+        "isVerified": false,
+        "title": "DevOps Engineer",
+        "isShared": true
+      },
+      "priority": {
+        "self": "https://jira.atlassian.net/rest/api/2/priority/3",
+        "iconUrl": "https://jira.atlassian.net/images/icons/priorities/medium_new.svg",
+        "name": "Medium",
+        "id": "3"
+      },
+      "labels": [],
+      "customfield_10016": null,
+      "environment": null,
+      "customfield_10117": [
+        {
+          "self": "https://jira.atlassian.net/rest/api/2/user?accountId=5f7e993f287870006a47d943",
+          "accountId": "5f7e993f287870006a47d943",
+          "avatarUrls": {
+            "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/initials/JY-5.png",
+            "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/initials/JY-5.png",
+            "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/initials/JY-5.png",
+            "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/initials/JY-5.png"
+          },
+          "displayName": "Pattarapong Y",
+          "active": true,
+          "timeZone": "Asia/Bangkok",
+          "accountType": "atlassian"
+        },
+        {
+          "self": "https://jira.atlassian.net/rest/api/2/user?accountId=5fa65e09c82473007066151c",
+          "accountId": "5fa65e09c82473007066151c",
+          "avatarUrls": {
+            "48x48": "https://secure.gravatar.com/avatar/ed156fb47b855688017fb2f1a9dd512c?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FMR-6.png",
+            "24x24": "https://secure.gravatar.com/avatar/ed156fb47b855688017fb2f1a9dd512c?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FMR-6.png",
+            "16x16": "https://secure.gravatar.com/avatar/ed156fb47b855688017fb2f1a9dd512c?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FMR-6.png",
+            "32x32": "https://secure.gravatar.com/avatar/ed156fb47b855688017fb2f1a9dd512c?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FMR-6.png"
+          },
+          "displayName": "Namon P",
+          "active": true,
+          "timeZone": "Asia/Bangkok",
+          "accountType": "atlassian"
+        },
+        {
+          "self": "https://jira.atlassian.net/rest/api/2/user?accountId=5ebde4017dab3a0bb475f4c3",
+          "accountId": "5ebde4017dab3a0bb475f4c3",
+          "avatarUrls": {
+            "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/initials/PW-1.png",
+            "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/initials/PW-1.png",
+            "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/initials/PW-1.png",
+            "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/initials/PW-1.png"
+          },
+          "displayName": "Prasert Y",
+          "active": true,
+          "timeZone": "Asia/Bangkok",
+          "accountType": "atlassian"
+        },
+        {
+          "self": "https://jira.atlassian.net/rest/api/2/user?accountId=712020%3Aac5d14e0-cef4-4d7f-8a04-9df62a806d43",
+          "accountId": "712020:ac5d14e0-cef4-4d7f-8a04-9df62a806d43",
+          "avatarUrls": {
+            "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/initials/TM-2.png",
+            "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/initials/TM-2.png",
+            "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/initials/TM-2.png",
+            "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/initials/TM-2.png"
+          },
+          "displayName": "Nattapong P",
+          "active": true,
+          "timeZone": "Asia/Bangkok",
+          "accountType": "atlassian"
+        },
+        {
+          "self": "https://jira.atlassian.net/rest/api/2/user?accountId=712020%3Af9ab36dd-bee8-439e-a251-991ccb2dd3d7",
+          "accountId": "712020:f9ab36dd-bee8-439e-a251-991ccb2dd3d7",
+          "avatarUrls": {
+            "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/initials/WN-2.png",
+            "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/initials/WN-2.png",
+            "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/initials/WN-2.png",
+            "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/initials/WN-2.png"
+          },
+          "displayName": "Monrudee N",
+          "active": true,
+          "timeZone": "Asia/Bangkok",
+          "accountType": "atlassian"
+        }
+      ],
+      "customfield_10019": "0|i01omi:",
+      "timeestimate": null,
+      "aggregatetimeoriginalestimate": null,
+      "versions": [],
+      "duedate": null,
+      "progress": {
+        "progress": 0,
+        "total": 0
+      },
+      "votes": {
+        "self": "https://jira.atlassian.net/rest/api/2/issue/XPSOPS-16/votes",
+        "votes": 0,
+        "hasVoted": false
+      },
+      "issuelinks": [],
+      "assignee": {
+        "self": "https://jira.atlassian.net/rest/api/2/user?accountId=712020%3A1a0df378-f399-40bb-bc8f-ca66d95e68d7",
+        "accountId": "712020:1a0df378-f399-40bb-bc8f-ca66d95e68d7",
+        "avatarUrls": {
+          "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/initials/DK-2.png",
+          "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/initials/DK-2.png",
+          "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/initials/DK-2.png",
+          "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/initials/DK-2.png"
+        },
+        "displayName": "Montree Tipja",
+        "active": true,
+        "timeZone": "Asia/Bangkok",
+        "accountType": "atlassian"
+      },
+      "updated": "2025-07-08T18:04:20.632+0700",
+      "status": {
+        "self": "https://jira.atlassian.net/rest/api/2/status/10002",
+        "description": "",
+        "iconUrl": "https://jira.atlassian.net/",
+        "name": "Done",
+        "id": "10002",
+        "statusCategory": {
+          "self": "https://jira.atlassian.net/rest/api/2/statuscategory/3",
+          "id": 3,
+          "key": "done",
+          "colorName": "green",
+          "name": "Complete"
+        }
+      }
+    }
+  },
+  "changelog": {
+    "id": "50092",
+    "items": [
+      {
+        "field": "resolution",
+        "fieldtype": "jira",
+        "fieldId": "resolution",
+        "from": null,
+        "fromString": null,
+        "to": "10000",
+        "toString": "Done"
+      },
+      {
+        "field": "status",
+        "fieldtype": "jira",
+        "fieldId": "status",
+        "from": "10004",
+        "fromString": "In Review",
+        "to": "10002",
+        "toString": "Done"
+      }
+    ]
+  }
+}
